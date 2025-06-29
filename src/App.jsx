@@ -3,21 +3,38 @@ import Feature from "./Feature";
 import Home from "./Home";
 // in main.jsx or App.jsx
 import "./index.css"; // or wherever your tailwind directives are
-import Gallery from "./Gallery";
+import Gallery from "./Ideas";
 import Navbar from "./Navbar";
 import Resources from "./Resources";
+import Footer from "./Footer";
+import Ideas from "./Ideas";
+import Test from "./Test";
+import FindPros from "./FindPros";
+import DesignPage from "./DesignPage";
+import DesignDetailPage from "./DesignDetailPage";
 
 function App() {
   return (
     <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/gallery" element={<Gallery />} />
-        {/* <Route path="/" element={<Feature />} /> */}
-        <Route path="/feature" element={<Feature />} />
-        <Route path="/resources" element={<Resources />} />
-      </Routes>
+      <div className="relative">
+        <div className="fixed top-0 left-0 right-0 z-50">
+          <Navbar />
+        </div>
+        {/* Add top padding equal to Navbar height */}
+        <div className="pt-16">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/ideas" element={<Ideas />} />
+            <Route path="/pros" element={<FindPros />} />
+            <Route path="/test" element={<Test />} />
+            <Route path="/feature" element={<Feature />} />
+            <Route path="/resources" element={<Resources />} />
+            <Route path="/design-page" element={<DesignPage />} />
+            <Route path="/design-detail-page" element={<DesignDetailPage />} />
+          </Routes>
+        </div>
+        <Footer />
+      </div>
     </Router>
   );
 }

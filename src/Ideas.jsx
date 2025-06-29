@@ -29,7 +29,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
  * @property {number} budget
  */
 
-const Gallery = () => {
+const Ideas = () => {
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProject, setSelectedProject] = useState(null);
@@ -1194,4 +1194,4 @@ const Gallery = () => {
     </div>
   );
 };
-export default Gallery;
+export default Ideas;
