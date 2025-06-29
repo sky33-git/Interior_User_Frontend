@@ -115,7 +115,7 @@ const VenderDetail = () => {
         </div>
         {/* Tabbed Navigation */}
         <Tabs defaultValue="about" className="w-full">
-          <TabsList className="w-full justify-start border-b rounded-none bg-transparent h-auto py-0 mb-6">
+          <TabsList className="w-full justify-center sm:justify-start  flex-wrap border-b rounded-none bg-transparent h-auto py-0 mb-6">
             <TabsTrigger
               value="about"
               className="data-[state=active]:border-b-2 data-[state=active]:border-black data-[state=active]:shadow-none rounded-none px-4 py-3 text-base font-medium cursor-pointer"
@@ -153,7 +153,8 @@ const VenderDetail = () => {
               Ideabooks
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="about" className="mt-0">
+          {/* about */}
+          <div value="about" className="mt-0">
             <div className="max-w-3xl">
               <p className="text-gray-700 mb-4">
                 De Panache has been an interior design and execution firm based
@@ -202,8 +203,9 @@ const VenderDetail = () => {
                 ></i>
               </Button>
             </div>
-          </TabsContent>
-          <TabsContent value="projects" className="mt-0">
+          </div>
+          {/* projects */}
+          <div value="projects" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {projects.map((project) => (
                 <div
@@ -233,8 +235,9 @@ const VenderDetail = () => {
                 </div>
               ))}
             </div>
-          </TabsContent>
-          <TabsContent value="business" className="mt-0">
+          </div>
+          {/* business */}
+          <div value="business" className="mt-0">
             <div className="max-w-3xl">
               <h3 className="text-xl font-medium mb-4">Business Information</h3>
               <div className="space-y-6">
@@ -288,8 +291,9 @@ const VenderDetail = () => {
                 </div>
               </div>
             </div>
-          </TabsContent>
-          <TabsContent value="credentials" className="mt-0">
+          </div>
+          {/* credentials */}
+          <div value="credentials" className="mt-0">
             <div className="max-w-3xl">
               <h3 className="text-xl font-medium mb-4">
                 Professional Information
@@ -387,8 +391,9 @@ const VenderDetail = () => {
                 </div>
               </div>
             </div>
-          </TabsContent>
-          <TabsContent value="reviews" className="mt-0">
+          </div>
+          {/* reviews */}
+          <div value="reviews" className="mt-0">
             <div className="max-w-3xl">
               <div className="flex items-center justify-between mb-6">
                 <div>
@@ -461,8 +466,9 @@ const VenderDetail = () => {
                 </div>
               </ScrollArea>
             </div>
-          </TabsContent>
-          <TabsContent value="ideabooks" className="mt-0">
+          </div>
+          {/* ideabooks */}
+          <div value="ideabooks" className="mt-0">
             <div className="max-w-3xl">
               <h3 className="text-xl font-medium mb-6">Design Ideabooks</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -569,7 +575,7 @@ const VenderDetail = () => {
                 </div>
               </div>
             </div>
-          </TabsContent>
+          </div>
         </Tabs>
       </div>
     </div>

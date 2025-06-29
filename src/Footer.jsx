@@ -2,214 +2,133 @@ import React from "react";
 
 function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300 pt-16 pb-8">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-          <div>
+    <footer className="bg-gray-900 text-gray-300 pt-16 pb-8 text-sm sm:text-base">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Top Section */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 mb-12 text-center sm:text-left">
+          {/* Logo & Description */}
+          <div className="flex flex-col items-center sm:items-start">
             <div className="flex items-center gap-2 mb-4">
               <i className="fas fa-cube text-indigo-400 text-2xl"></i>
-              <span className="text-xl font-bold text-white">DesignVerse</span>
+              <span className="text-lg sm:text-xl font-bold text-white">
+                DesignVerse
+              </span>
             </div>
-            <p className="text-gray-400 mb-4">
+            <p className="text-gray-400 mb-4 leading-relaxed max-w-xs">
               Transform your ideas into stunning spaces with our AI-powered
               design platform.
             </p>
-            <div className="flex space-x-4">
-              <a
-                href="#"
-                className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-              >
-                <i className="fab fa-facebook-f"></i>
-              </a>
-              <a
-                href="#"
-                className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-              >
-                <i className="fab fa-twitter"></i>
-              </a>
-              <a
-                href="#"
-                className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-              >
-                <i className="fab fa-instagram"></i>
-              </a>
-              <a
-                href="#"
-                className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-              >
-                <i className="fab fa-linkedin-in"></i>
-              </a>
+            <div className="flex space-x-4 justify-center sm:justify-start">
+              {["facebook-f", "twitter", "instagram", "linkedin-in"].map(
+                (icon) => (
+                  <a
+                    key={icon}
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    <i className={`fab fa-${icon}`}></i>
+                  </a>
+                )
+              )}
             </div>
           </div>
 
-          <div>
-            <h3 className="text-white font-bold mb-4">Product</h3>
+          {/* Product */}
+          <div className="flex flex-col items-center sm:items-start">
+            <h3 className="text-white font-semibold mb-4 text-base sm:text-lg">
+              Product
+            </h3>
             <ul className="space-y-2">
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  Features
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  Pricing
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  Case Studies
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  Reviews
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  Updates
-                </a>
-              </li>
+              {[
+                "Features",
+                "Pricing",
+                "Case Studies",
+                "Reviews",
+                "Updates",
+              ].map((item) => (
+                <li key={item}>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    {item}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
-          <div>
-            <h3 className="text-white font-bold mb-4">Company</h3>
+          {/* Company */}
+          <div className="flex flex-col items-center sm:items-start">
+            <h3 className="text-white font-semibold mb-4 text-base sm:text-lg">
+              Company
+            </h3>
             <ul className="space-y-2">
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  About
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  Careers
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  Press
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  Contact
-                </a>
-              </li>
+              {["About", "Careers", "Blog", "Press", "Contact"].map((item) => (
+                <li key={item}>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    {item}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
-          <div>
-            <h3 className="text-white font-bold mb-4">Resources</h3>
+          {/* Resources */}
+          <div className="flex flex-col items-center sm:items-start">
+            <h3 className="text-white font-semibold mb-4 text-base sm:text-lg">
+              Resources
+            </h3>
             <ul className="space-y-2">
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  Documentation
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  Help Center
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  Community
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  Partners
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  Tutorials
-                </a>
-              </li>
+              {[
+                "Documentation",
+                "Help Center",
+                "Community",
+                "Partners",
+                "Tutorials",
+              ].map((item) => (
+                <li key={item}>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    {item}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
 
+        {/* Bottom Section */}
         <div className="border-t border-gray-800 pt-8 mt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-500 text-sm">
+          <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center text-center md:text-left text-xs sm:text-sm">
+            {/* Copyright */}
+            <p className="text-gray-500">
               © 2025 DesignVerse. All rights reserved.
             </p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
-              <a
-                href="#"
-                className="text-gray-500 hover:text-white text-sm transition-colors cursor-pointer"
-              >
-                Terms
-              </a>
-              <a
-                href="#"
-                className="text-gray-500 hover:text-white text-sm transition-colors cursor-pointer"
-              >
-                Privacy
-              </a>
-              <a
-                href="#"
-                className="text-gray-500 hover:text-white text-sm transition-colors cursor-pointer"
-              >
-                Cookies
-              </a>
+
+            {/* Links */}
+            <div className="flex justify-center md:justify-start space-x-6">
+              {["Terms", "Privacy", "Cookies"].map((item) => (
+                <a
+                  key={item}
+                  href="#"
+                  className="text-gray-500 hover:text-white transition-colors"
+                >
+                  {item}
+                </a>
+              ))}
             </div>
-            <div className="flex items-center space-x-4 mt-4 md:mt-0">
-              <i className="fab fa-cc-visa text-2xl text-gray-500"></i>
-              <i className="fab fa-cc-mastercard text-2xl text-gray-500"></i>
-              <i className="fab fa-cc-paypal text-2xl text-gray-500"></i>
+
+            {/* Payment Icons */}
+            <div className="flex justify-center md:justify-start space-x-4 text-gray-500 text-lg">
+              <i className="fab fa-cc-visa"></i>
+              <i className="fab fa-cc-mastercard"></i>
+              <i className="fab fa-cc-paypal"></i>
             </div>
           </div>
         </div>
