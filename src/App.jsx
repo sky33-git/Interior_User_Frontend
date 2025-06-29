@@ -11,9 +11,9 @@ import Test from "./Test";
 import FindPros from "./FindPros";
 import DesignPage from "./DesignPage";
 import DesignDetailPage from "./DesignDetailPage";
-import DesignIdeas from "./designIdeas";
 import Home from "./pages/Home";
 import Search from "./SearchAi";
+import DesignIdeas from "./DesignIdeas";
 
 function App() {
   return (
