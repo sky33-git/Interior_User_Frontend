@@ -14,6 +14,7 @@ import DesignDetailPage from "./DesignDetailPage";
 import Home from "./pages/Home";
 import Search from "./SearchAi";
 import DesignIdeas from "./DesignIdeasPage";
+import VenderDetail from "./VenderDetail";
 
 function App() {
   return (
@@ -34,7 +35,7 @@ function App() {
             <Route path="/design-page" element={<DesignPage />} />
             <Route path="/design-ideas" element={<DesignIdeas />} />
             <Route path="/design-detail-page" element={<DesignDetailPage />} />
-            <Route path="/design-vendor" element={<DesignDetailPage />} />
+            <Route path="/design-vendor" element={<VenderDetail />} />
             <Route path="/search-ai" element={<Search />} />
           </Routes>
         </div>
