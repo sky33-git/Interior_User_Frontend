@@ -32,9 +32,15 @@ function Navbar() {
       to: "/design-ideas",
       icon: <Image size={20} />,
     },
+    {
+      name: "Find Pros",
+      to: "/design-ideas",
+      icon: <Image size={20} />,
+    },
   ];
 
-  console.log("hello");
+  //hello
+
   return (
     <>
       {/* Desktop Navbar */}

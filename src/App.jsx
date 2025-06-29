@@ -13,7 +13,7 @@ import DesignPage from "./DesignPage";
 import DesignDetailPage from "./DesignDetailPage";
 import Home from "./pages/Home";
 import Search from "./SearchAi";
-import DesignIdeas from "./DesignIdeas";
+import DesignIdeas from "./DesignIdeasPage";
 
 function App() {
   return (
