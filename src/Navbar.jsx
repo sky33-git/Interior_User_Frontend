@@ -32,11 +32,6 @@ function Navbar() {
       to: "/design-ideas",
       icon: <Image size={20} />,
     },
-    {
-      name: "Find Pros",
-      to: "/design-ideas",
-      icon: <Image size={20} />,
-    },
   ];
 
   //hello
