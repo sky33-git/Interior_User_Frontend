@@ -34,6 +34,7 @@ function Navbar() {
     },
   ];
 
+  console.log("hello");
   return (
     <>
       {/* Desktop Navbar */}
