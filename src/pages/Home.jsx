@@ -17,11 +17,11 @@ import { Pagination, Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import ProductFeature from "./ProductFeature";
-import HeroSection from "./HeroSection";
-import HowItWorks from "./HowItWorks";
-import Demo from "./Demo";
-import Features from "./Features";
+import HeroSection from "@/HeroSection";
+import Features from "@/Features";
+import Demo from "@/Demo";
+import HowItWorks from "@/HowItWorks";
+import ProductFeature from "@/ProductFeature";
 
 const Home = () => {
   // For parallax effect on hero section

@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Feature from "./Feature";
-import Home from "./Home";
 // in main.jsx or App.jsx
 import "./index.css"; // or wherever your tailwind directives are
 import Gallery from "./Ideas";
@@ -12,6 +11,9 @@ import Test from "./Test";
 import FindPros from "./FindPros";
 import DesignPage from "./DesignPage";
 import DesignDetailPage from "./DesignDetailPage";
+import DesignIdeas from "./designIdeas";
+import Home from "./pages/Home";
+import Search from "./SearchAi";
 
 function App() {
   return (
@@ -30,7 +32,10 @@ function App() {
             <Route path="/feature" element={<Feature />} />
             <Route path="/resources" element={<Resources />} />
             <Route path="/design-page" element={<DesignPage />} />
+            <Route path="/design-ideas" element={<DesignIdeas />} />
             <Route path="/design-detail-page" element={<DesignDetailPage />} />
+            <Route path="/design-vendor" element={<DesignDetailPage />} />
+            <Route path="/search-ai" element={<Search />} />
           </Routes>
         </div>
         <Footer />
