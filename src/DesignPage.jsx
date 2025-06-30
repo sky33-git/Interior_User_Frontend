@@ -410,7 +410,7 @@ const DesignPage = () => {
         </div> */}
 
         {/* Design Gallery Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           {designs.map((design) => (
             <Link to={"/design-detail-page"}>
               <Card
