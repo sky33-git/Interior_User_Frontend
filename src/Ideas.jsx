@@ -59,161 +59,138 @@ const Ideas = () => {
   const projects = [
     {
       id: 1,
-      title: "Modern Minimalist Living Room",
-      designer: "Emma Wilson",
+      title: "Modern Minimalist Living Room by Aakash Interiors",
+      designer: "Aakash Interiors",
       roomType: "livingRoom",
       style: "Modern",
-      imageUrl:
-        "https://readdy.ai/api/search-image?query=modern%20minimalist%20living%20room%20with%20white%20walls%2C%20light%20wood%20floors%2C%20minimalist%20furniture%2C%20large%20windows%20with%20natural%20light%2C%20sleek%20design%20elements%2C%20neutral%20color%20palette%2C%20clean%20lines%2C%20uncluttered%20space%2C%20contemporary%20aesthetic%2C%20professional%20interior%20photography&width=600&height=400&seq=living1&orientation=landscape",
+      imageUrl: "...",
       likes: 245,
-      description:
-        "A clean, minimalist living room design with carefully selected furniture pieces that maximize both form and function. Features natural lighting and a neutral color palette.",
+      description: "...",
       budget: 8500,
     },
     {
       id: 2,
-      title: "Contemporary Kitchen with Island",
-      designer: "Michael Chen",
+      title: "Contemporary Kitchen with Island by Kshitij Designs",
+      designer: "Kshitij Designs",
       roomType: "kitchen",
       style: "Contemporary",
-      imageUrl:
-        "https://readdy.ai/api/search-image?query=contemporary%20kitchen%20with%20large%20central%20island%2C%20white%20cabinets%2C%20marble%20countertops%2C%20pendant%20lighting%2C%20stainless%20steel%20appliances%2C%20hardwood%20flooring%2C%20bright%20and%20airy%20space%2C%20elegant%20fixtures%2C%20professional%20interior%20photography%20with%20natural%20lighting&width=600&height=400&seq=kitchen1&orientation=landscape",
+      imageUrl: "...",
       likes: 189,
-      description:
-        "A spacious kitchen featuring a central island, premium appliances, and elegant fixtures. Perfect for both cooking and entertaining guests.",
+      description: "...",
       budget: 12000,
     },
     {
       id: 3,
-      title: "Serene Master Bedroom Retreat",
-      designer: "Sophia Rodriguez",
+      title: "Serene Master Bedroom Retreat by Tranquil Spaces",
+      designer: "Tranquil Spaces",
       roomType: "bedroom",
       style: "Transitional",
-      imageUrl:
-        "https://readdy.ai/api/search-image?query=serene%20master%20bedroom%20with%20king%20size%20bed%2C%20soft%20neutral%20colors%2C%20plush%20bedding%2C%20elegant%20nightstands%2C%20reading%20nook%2C%20large%20windows%2C%20area%20rug%2C%20ambient%20lighting%2C%20tasteful%20artwork%2C%20professional%20interior%20photography%20with%20soft%20lighting&width=600&height=400&seq=bedroom1&orientation=landscape",
+      imageUrl: "...",
       likes: 156,
-      description:
-        "A tranquil bedroom design that promotes relaxation and restful sleep. Features luxurious bedding, ambient lighting, and thoughtful details.",
+      description: "...",
       budget: 6500,
     },
     {
       id: 4,
-      title: "Luxury Spa-Inspired Bathroom",
-      designer: "David Park",
+      title: "Luxury Spa-Inspired Bathroom by Aastha Interiors",
+      designer: "Aastha Interiors",
       roomType: "bathroom",
       style: "Luxury",
-      imageUrl:
-        "https://readdy.ai/api/search-image?query=luxury%20spa%20inspired%20bathroom%20with%20freestanding%20bathtub%2C%20walk%20in%20shower%20with%20glass%20doors%2C%20double%20vanity%20with%20marble%20countertop%2C%20elegant%20lighting%20fixtures%2C%20neutral%20tiles%2C%20heated%20floors%2C%20plush%20towels%2C%20minimal%20decor%2C%20professional%20interior%20photography&width=600&height=400&seq=bathroom1&orientation=landscape",
+      imageUrl: "...",
       likes: 203,
-      description:
-        "A spa-like bathroom experience with premium fixtures, a freestanding tub, and elegant finishes. Designed for ultimate relaxation and rejuvenation.",
+      description: "...",
       budget: 9200,
     },
     {
       id: 5,
-      title: "Productive Home Office Setup",
-      designer: "James Thompson",
+      title: "Productive Home Office Setup by DesignShala",
+      designer: "DesignShala",
       roomType: "office",
       style: "Modern",
-      imageUrl:
-        "https://readdy.ai/api/search-image?query=modern%20home%20office%20with%20ergonomic%20desk%20setup%2C%20built%20in%20shelving%2C%20comfortable%20office%20chair%2C%20natural%20lighting%20from%20large%20windows%2C%20minimalist%20decor%2C%20organized%20workspace%2C%20indoor%20plants%2C%20clean%20aesthetic%2C%20professional%20interior%20photography&width=600&height=400&seq=office1&orientation=landscape",
+      imageUrl: "...",
       likes: 178,
-      description:
-        "A functional home office that maximizes productivity while maintaining style. Features ergonomic furniture and smart storage solutions.",
+      description: "...",
       budget: 4800,
     },
     {
       id: 6,
-      title: "Scandinavian Living Room",
-      designer: "Anna Johansson",
+      title: "Scandinavian Living Room by Urban Nest",
+      designer: "Urban Nest",
       roomType: "livingRoom",
       style: "Scandinavian",
-      imageUrl:
-        "https://readdy.ai/api/search-image?query=scandinavian%20living%20room%20with%20light%20wood%20floors%2C%20white%20walls%2C%20minimalist%20furniture%2C%20natural%20textiles%2C%20simple%20decor%2C%20hygge%20elements%2C%20cozy%20lighting%2C%20clean%20lines%2C%20functional%20design%2C%20professional%20interior%20photography%20with%20bright%20natural%20light&width=600&height=400&seq=living2&orientation=landscape",
+      imageUrl: "...",
       likes: 231,
-      description:
-        "A bright and airy living space inspired by Scandinavian design principles. Features natural materials, functional furniture, and a cozy atmosphere.",
+      description: "...",
       budget: 7300,
     },
     {
       id: 7,
-      title: "Industrial Loft Kitchen",
-      designer: "Marcus Wright",
+      title: "Industrial Loft Kitchen by Studio Prakriti",
+      designer: "Studio Prakriti",
       roomType: "kitchen",
       style: "Industrial",
-      imageUrl:
-        "https://readdy.ai/api/search-image?query=industrial%20loft%20kitchen%20with%20exposed%20brick%20walls%2C%20concrete%20countertops%2C%20metal%20pendant%20lights%2C%20open%20shelving%2C%20stainless%20steel%20appliances%2C%20wood%20and%20metal%20barstools%2C%20urban%20aesthetic%2C%20professional%20interior%20photography&width=600&height=400&seq=kitchen2&orientation=landscape",
+      imageUrl: "...",
       likes: 167,
-      description:
-        "An urban kitchen design with industrial elements like exposed brick, concrete countertops, and metal fixtures. Perfect for modern city living.",
+      description: "...",
       budget: 10500,
     },
     {
       id: 8,
-      title: "Bohemian Bedroom Oasis",
-      designer: "Zoe Martinez",
+      title: "Bohemian Bedroom Oasis by Ananya Creations",
+      designer: "Ananya Creations",
       roomType: "bedroom",
       style: "Bohemian",
-      imageUrl:
-        "https://readdy.ai/api/search-image?query=bohemian%20bedroom%20with%20layered%20textiles%2C%20macrame%20wall%20hanging%2C%20plants%2C%20colorful%20accents%2C%20patterned%20area%20rug%2C%20canopy%20bed%2C%20mixed%20materials%2C%20eclectic%20decor%2C%20warm%20lighting%2C%20professional%20interior%20photography&width=600&height=400&seq=bedroom2&orientation=landscape",
+      imageUrl: "...",
       likes: 192,
-      description:
-        "An eclectic bedroom featuring rich textures, global-inspired decor, and vibrant accents. Creates a personal and relaxed atmosphere.",
+      description: "...",
       budget: 5800,
     },
     {
       id: 9,
-      title: "Mid-Century Modern Living Room",
-      designer: "Thomas Nelson",
+      title: "Mid-Century Modern Living Room by D’Décor Studio",
+      designer: "D’Décor Studio",
       roomType: "livingRoom",
       style: "Mid-Century",
-      imageUrl:
-        "https://readdy.ai/api/search-image?query=mid%20century%20modern%20living%20room%20with%20iconic%20furniture%20pieces%2C%20warm%20wood%20tones%2C%20geometric%20patterns%2C%20statement%20lighting%2C%20clean%20lines%2C%20vintage%20inspired%20decor%2C%20architectural%20elements%2C%20professional%20interior%20photography%20with%20warm%20lighting&width=600&height=400&seq=living3&orientation=landscape",
+      imageUrl: "...",
       likes: 218,
-      description:
-        "A stylish living room featuring iconic mid-century furniture pieces, warm wood tones, and retro-inspired accessories.",
+      description: "...",
       budget: 8900,
     },
     {
       id: 10,
-      title: "Farmhouse Style Kitchen",
-      designer: "Laura Bennett",
+      title: "Farmhouse Style Kitchen by GharDekho Interiors",
+      designer: "GharDekho Interiors",
       roomType: "kitchen",
       style: "Farmhouse",
-      imageUrl:
-        "https://readdy.ai/api/search-image?query=farmhouse%20kitchen%20with%20white%20shaker%20cabinets%2C%20apron%20sink%2C%20butcher%20block%20island%2C%20subway%20tile%20backsplash%2C%20vintage%20accessories%2C%20open%20shelving%2C%20rustic%20elements%2C%20warm%20and%20inviting%20atmosphere%2C%20professional%20interior%20photography&width=600&height=400&seq=kitchen3&orientation=landscape",
+      imageUrl: "...",
       likes: 246,
-      description:
-        "A warm and inviting kitchen with classic farmhouse elements like shaker cabinets, an apron sink, and rustic accents.",
+      description: "...",
       budget: 9500,
     },
     {
       id: 11,
-      title: "Minimalist Bathroom Design",
-      designer: "Alex Kim",
+      title: "Minimalist Bathroom Design by Neha Bansal Design Co.",
+      designer: "Neha Bansal Design Co.",
       roomType: "bathroom",
       style: "Minimalist",
-      imageUrl:
-        "https://readdy.ai/api/search-image?query=minimalist%20bathroom%20with%20clean%20lines%2C%20wall%20mounted%20vanity%2C%20frameless%20glass%20shower%2C%20large%20format%20tiles%2C%20simple%20fixtures%2C%20neutral%20color%20palette%2C%20uncluttered%20space%2C%20hidden%20storage%2C%20professional%20interior%20photography%20with%20bright%20lighting&width=600&height=400&seq=bathroom2&orientation=landscape",
+      imageUrl: "...",
       likes: 172,
-      description:
-        "A sleek bathroom design with clean lines, hidden storage, and a monochromatic color scheme. Demonstrates that less is more.",
+      description: "...",
       budget: 7200,
     },
     {
       id: 12,
-      title: "Creative Studio Office",
-      designer: "Olivia Chen",
+      title: "Creative Studio Office by Aarambh Studios",
+      designer: "Aarambh Studios",
       roomType: "office",
       style: "Eclectic",
-      imageUrl:
-        "https://readdy.ai/api/search-image?query=creative%20studio%20office%20with%20colorful%20accents%2C%20inspirational%20wall%20art%2C%20custom%20desk%20setup%2C%20organized%20art%20supplies%2C%20good%20lighting%2C%20comfortable%20seating%2C%20plants%2C%20personal%20touches%2C%20professional%20interior%20photography&width=600&height=400&seq=office2&orientation=landscape",
+      imageUrl: "...",
       likes: 183,
-      description:
-        "A vibrant workspace designed to inspire creativity and productivity. Features custom storage solutions and personal touches.",
+      description: "...",
       budget: 5500,
     },
   ];
+
   // Filter projects based on active category, search query, and filters
   const filteredProjects = projects.filter((project) => {
     // Filter by category

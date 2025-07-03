@@ -47,94 +47,95 @@ const DesignIdeas = () => {
   const serviceProviders = [
     {
       id: 1,
-      name: "Elite Home Services",
+      name: "Sharma Home Solutions",
       rating: 4.8,
       reviews: 127,
       description:
         "Professional home renovation and repair services with over 15 years of experience. Specializing in kitchen remodels, bathroom upgrades, and general home improvements.",
       address: "1234 Main Street, Seattle, WA",
       imageUrl:
-        "https://readdy.ai/api/search-image?query=professional%20home%20renovation%20work%20showing%20a%20beautifully%20remodeled%20modern%20kitchen%20with%20marble%20countertops%2C%20wooden%20cabinets%2C%20and%20stainless%20steel%20appliances%20with%20soft%20natural%20lighting%20and%20minimalist%20design&width=600&height=400&seq=1&orientation=landscape",
+        "https://images.pexels.com/photos/3797991/pexels-photo-3797991.jpeg?_gl=1*1p8fe40*_ga*MTY3NjY1NjY5Mi4xNzUwNTE5NjUw*_ga_8JE65Q40S6*czE3NTE1NDMzNzckbzIkZzEkdDE3NTE1NDM0NDUkajU1JGwwJGgw",
     },
     {
       id: 2,
-      name: "indigo Thumb Landscaping",
+      name: "GreenLeaf Landscaping Services",
       rating: 4.9,
       reviews: 215,
       description:
         "Complete landscaping solutions for residential and commercial properties. Our team creates beautiful outdoor spaces that enhance your property value and enjoyment.",
       address: "567 Garden Ave, Portland, OR",
       imageUrl:
-        "https://readdy.ai/api/search-image?query=professional%20landscaping%20work%20showing%20a%20beautiful%20garden%20with%20colorful%20flowers%2C%20well-trimmed%20hedges%2C%20stone%20pathway%2C%20and%20indigo%20lawn%20with%20perfect%20lighting%20and%20clean%20background&width=600&height=400&seq=2&orientation=landscape",
+        "https://images.pexels.com/photos/3797991/pexels-photo-3797991.jpeg?_gl=1*1p8fe40*_ga*MTY3NjY1NjY5Mi4xNzUwNTE5NjUw*_ga_8JE65Q40S6*czE3NTE1NDMzNzckbzIkZzEkdDE3NTE1NDM0NDUkajU1JGwwJGgw",
     },
     {
       id: 3,
-      name: "Sparkling Clean Services",
-      rating: 4.7,
-      reviews: 189,
-      description:
-        "Eco-friendly cleaning services for homes and offices. We use premium, non-toxic cleaning products to ensure your space is spotless and healthy.",
-      address: "890 Clean St, San Francisco, CA",
-      imageUrl:
-        "https://readdy.ai/api/search-image?query=professional%20home%20cleaning%20service%20showing%20a%20spotless%20living%20room%20with%20gleaming%20hardwood%20floors%2C%20dust-free%20surfaces%2C%20and%20organized%20furniture%20with%20natural%20light%20streaming%20through%20windows&width=600&height=400&seq=3&orientation=landscape",
-    },
-    {
-      id: 4,
-      name: "Master Plumbing Solutions",
+      name: "Patel Plumbing Works",
       rating: 4.6,
       reviews: 156,
       description:
         "24/7 emergency plumbing services with licensed and insured professionals. From minor repairs to major installations, we handle all your plumbing needs.",
       address: "432 Water Way, Denver, CO",
       imageUrl:
-        "https://readdy.ai/api/search-image?query=professional%20plumber%20working%20on%20modern%20bathroom%20fixtures%20with%20shiny%20chrome%20faucets%20and%20clean%20white%20porcelain%20sink%20in%20a%20well-lit%20contemporary%20bathroom%20with%20minimal%20background%20distractions&width=600&height=400&seq=4&orientation=landscape",
+        "https://images.pexels.com/photos/3797991/pexels-photo-3797991.jpeg?_gl=1*1p8fe40*_ga*MTY3NjY1NjY5Mi4xNzUwNTE5NjUw*_ga_8JE65Q40S6*czE3NTE1NDMzNzckbzIkZzEkdDE3NTE1NDM0NDUkajU1JGwwJGgw",
     },
     {
-      id: 5,
-      name: "Bright Electric Co.",
-      rating: 4.9,
-      reviews: 203,
-      description:
-        "Licensed electricians providing residential and commercial electrical services. Specializing in installations, repairs, and energy-efficient solutions.",
-      address: "765 Power Blvd, Austin, TX",
-      imageUrl:
-        "https://readdy.ai/api/search-image?query=professional%20electrician%20installing%20modern%20lighting%20fixtures%20in%20an%20elegant%20living%20room%20with%20clean%20white%20walls%20and%20wooden%20flooring%20with%20perfect%20lighting%20and%20minimal%20background&width=600&height=400&seq=5&orientation=landscape",
-    },
-    {
-      id: 6,
-      name: "Perfect Paint Pros",
+      id: 4,
+      name: "Verma Paint & Decor",
       rating: 4.7,
       reviews: 142,
       description:
         "Interior and exterior painting services with attention to detail. We transform spaces with premium paints and expert application techniques.",
       address: "321 Color Lane, Chicago, IL",
       imageUrl:
-        "https://readdy.ai/api/search-image?query=professional%20painter%20applying%20fresh%20white%20paint%20to%20interior%20wall%20with%20perfect%20technique%2C%20showing%20half-painted%20wall%20with%20clean%20lines%20and%20drop%20cloths%20protecting%20the%20floor%20in%20a%20bright%20room&width=600&height=400&seq=6&orientation=landscape",
+        "https://images.pexels.com/photos/3797991/pexels-photo-3797991.jpeg?_gl=1*1p8fe40*_ga*MTY3NjY1NjY5Mi4xNzUwNTE5NjUw*_ga_8JE65Q40S6*czE3NTE1NDMzNzckbzIkZzEkdDE3NTE1NDM0NDUkajU1JGwwJGgw",
+    },
+    {
+      id: 5,
+      name: "Elegant Living Interiors",
+      rating: 4.9,
+      reviews: 198,
+      description:
+        "Specializing in luxury interior design for homes and apartments. From space planning to final styling, we deliver customized, elegant living experiences.",
+      address: "45 MG Road, Bengaluru, KA",
+      imageUrl:
+        "https://images.pexels.com/photos/3797991/pexels-photo-3797991.jpeg?_gl=1*1p8fe40*_ga*MTY3NjY1NjY5Mi4xNzUwNTE5NjUw*_ga_8JE65Q40S6*czE3NTE1NDMzNzckbzIkZzEkdDE3NTE1NDM0NDUkajU1JGwwJGgw",
+    },
+    {
+      id: 6,
+      name: "ModSpace Modular Interiors",
+      rating: 4.8,
+      reviews: 174,
+      description:
+        "Experts in modular kitchens, wardrobes, and smart storage solutions. Our modern interior concepts blend form and function to suit urban lifestyles.",
+      address: "101 Sector 62, Noida, UP",
+      imageUrl:
+        "https://images.pexels.com/photos/3797991/pexels-photo-3797991.jpeg?_gl=1*1p8fe40*_ga*MTY3NjY1NjY5Mi4xNzUwNTE5NjUw*_ga_8JE65Q40S6*czE3NTE1NDMzNzckbzIkZzEkdDE3NTE1NDM0NDUkajU1JGwwJGgw",
     },
   ];
-  // Service categories
+
+  // Indian service categories
   const categories = [
-    "Home Cleaning",
-    "Plumbing",
-    "Electrical",
     "Landscaping",
     "Painting",
-    "Carpentry",
-    "Flooring",
-    "Roofing",
-    "HVAC",
+    "Flooring & Tiling",
+    "Roof Waterproofing",
+    "HVAC Installation",
     "Interior Design",
     "Home Renovation",
-    "Window Cleaning",
     "Pest Control",
     "Appliance Repair",
-    "Garage Door Services",
-    "Fence Installation",
-    "Drywall Services",
-    "Concrete Work",
-    "Pool Maintenance",
-    "Gutter Cleaning",
+    "Modular Kitchen Design",
+    "Custom Wardrobes",
+    "Space Planning",
+    "False Ceiling & Lighting",
+    "Vastu Consultation",
+    "Smart Home Automation",
+    "POP & Wall Textures",
+    "Balcony & Terrace Garden",
+    "Modular Furniture",
+    "Pooja Unit Design",
   ];
+
   // Generate star rating component
   const renderStars = (rating) => {
     const stars = [];
@@ -354,11 +355,11 @@ const DesignIdeas = () => {
             </div>
           </div>
           {/* Service Providers Listings */}
-          <div className="md:w-3/4">
+          {/* <div className="md:w-3/4">
             <h2 className="text-2xl font-bold mb-6 text-gray-800">
               Available Service Providers
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6">
               {serviceProviders.map((provider) => (
                 <div
                   key={provider.id}
@@ -506,6 +507,166 @@ const DesignIdeas = () => {
             </div>
             <div className="mt-8 text-center">
               <Button className="bg-indigo-700 hover:bg-indigo-800 text-white px-6 py-2 !rounded-button whitespace-nowrap cursor-pointer">
+                Load More <i className="fas fa-chevron-down ml-2"></i>
+              </Button>
+            </div>
+          </div> */}
+          <div className="md:w-3/4 mx-auto">
+            <h2 className="text-2xl font-bold mb-6 text-gray-800">
+              Available Service Providers
+            </h2>
+
+            <div className="space-y-6">
+              {serviceProviders.map((provider) => (
+                <div
+                  key={provider.id}
+                  className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden flex flex-col md:flex-row"
+                >
+                  <Link
+                    to="/design-vendor"
+                    className="md:w-1/3 h-60 md:h-auto overflow-hidden block"
+                  >
+                    <img
+                      src={provider.imageUrl}
+                      alt={provider.name}
+                      className="w-full h-full object-cover object-center md:rounded-l-lg"
+                    />
+                  </Link>
+
+                  <div className="p-4 flex flex-col justify-between md:w-2/3">
+                    <div>
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="text-lg font-semibold text-gray-800">
+                          {provider.name}
+                        </h3>
+                        <div className="flex items-center">
+                          <div className="flex mr-1">
+                            {renderStars(provider.rating)}
+                          </div>
+                          <span className="text-sm text-gray-500">
+                            ({provider.reviews})
+                          </span>
+                        </div>
+                      </div>
+
+                      <p className="text-gray-600 mb-3 line-clamp-2">
+                        {provider.description}
+                      </p>
+
+                      <div className="flex items-start mb-4">
+                        <i className="fas fa-map-marker-alt text-indigo-700 mt-1 mr-2"></i>
+                        <span className="text-sm text-gray-500">
+                          {provider.address}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-2 mt-auto">
+                      <Button
+                        className="bg-indigo-700 hover:bg-indigo-800 text-white flex-grow !rounded-button"
+                        onClick={() => {
+                          setSelectedProvider(provider);
+                          setMessageModal(true);
+                        }}
+                      >
+                        <i className="fas fa-envelope mr-2"></i> Send Message
+                      </Button>
+
+                      <Link to="/design-vendor">
+                        <Button
+                          variant="outline"
+                          className="text-indigo-700 border-indigo-700 hover:bg-indigo-50 !rounded-button whitespace-nowrap"
+                        >
+                          Read More
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Message Dialog Outside Map */}
+            <Dialog open={messageModal} onOpenChange={setMessageModal}>
+              <DialogContent className="sm:max-w-[500px]">
+                <DialogHeader>
+                  <DialogTitle className="text-xl font-semibold flex items-center gap-2">
+                    <i className="fas fa-envelope text-indigo-700"></i>
+                    Message to {selectedProvider?.name}
+                  </DialogTitle>
+                  <p className="text-sm text-gray-500">
+                    <i className="fas fa-clock mr-2"></i>
+                    Typically responds within 24 hours
+                  </p>
+                </DialogHeader>
+
+                <div className="space-y-4 py-4">
+                  <div>
+                    <Label htmlFor="subject" className="text-sm font-medium">
+                      Subject
+                    </Label>
+                    <Input
+                      id="subject"
+                      value={`Inquiry about services from ${selectedProvider?.name}`}
+                      readOnly
+                      className="mt-1"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="message" className="text-sm font-medium">
+                      Message
+                    </Label>
+                    <Textarea
+                      id="message"
+                      placeholder="Type your message here..."
+                      value={messageContent}
+                      onChange={(e) => setMessageContent(e.target.value)}
+                      className="mt-1 min-h-[150px]"
+                    />
+                  </div>
+
+                  <div>
+                    <Label
+                      htmlFor="attachments"
+                      className="text-sm font-medium"
+                    >
+                      Attachments (optional)
+                    </Label>
+                    <Input
+                      id="attachments"
+                      type="file"
+                      multiple
+                      className="mt-1"
+                      onChange={(e) => setAttachments(e.target.files)}
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Max file size: 10MB. Supported formats: jpg, png, pdf, doc
+                    </p>
+                  </div>
+                </div>
+
+                <DialogFooter className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => setMessageModal(false)}
+                    className="!rounded-button"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleSubmitMessage}
+                    className="bg-indigo-700 hover:bg-indigo-800 text-white !rounded-button"
+                  >
+                    <i className="fas fa-paper-plane mr-2"></i>
+                    Send Message
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+
+            <div className="mt-8 text-center">
+              <Button className="bg-indigo-700 hover:bg-indigo-800 text-white px-6 py-2 !rounded-button whitespace-nowrap">
                 Load More <i className="fas fa-chevron-down ml-2"></i>
               </Button>
             </div>

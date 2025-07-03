@@ -15,6 +15,8 @@ import Home from "./pages/Home";
 import Search from "./SearchAi";
 import DesignIdeas from "./DesignIdeasPage";
 import VenderDetail from "./VenderDetail";
+import SignUp from "./SignUp";
+import Login from "./Login";
 
 function App() {
   return (
@@ -37,6 +39,8 @@ function App() {
             <Route path="/design-detail-page" element={<DesignDetailPage />} />
             <Route path="/design-vendor" element={<VenderDetail />} />
             <Route path="/search-ai" element={<Search />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </div>
         <Footer />

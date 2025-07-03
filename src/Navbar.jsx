@@ -1,10 +1,37 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, Image, Layers, PlusCircle } from "lucide-react";
+import { Home, Image, Layers, PlusCircle, Search } from "lucide-react";
 
 function Navbar() {
   const location = useLocation();
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const dummySearchData = [
+    "Modern Living Room Design",
+    "Indian Traditional Bedroom",
+    "Vastu Compliant Kitchen Layout",
+    "Wall Color Combinations",
+    "Mandir Design Ideas",
+    "Wooden False Ceiling Designs",
+    "Space-saving Furniture",
+    "Modular Kitchen Cabinets",
+    "Royal Rajasthani Decor",
+    "Contemporary Hall Partition",
+    "South Indian Interior Themes",
+    "North Indian Wooden Interiors",
+    "LED Lighting for Drawing Room",
+    "Pooja Room Vastu Tips",
+    "Minimalist Indian Apartment",
+    "Kids Bedroom Decor India",
+  ];
+
+  const filteredSuggestions =
+    searchQuery.length > 0
+      ? dummySearchData.filter((item) =>
+          item.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : [];
 
   const navLinks = [
     { name: "Home", to: "/", icon: <Home size={20} /> },
@@ -52,6 +79,37 @@ function Navbar() {
             <div className="text-2xl font-bold text-indigo-600">
               Interior 5D
             </div>
+
+            {/* Search Input (Desktop) */}
+            <div className="flex items-center space-x-2 relative">
+              <div className="relative w-72 lg:w-96">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search..."
+                  className="w-full pl-10 pr-4 py-1.5 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+                <Search
+                  className="absolute left-3 top-2.5 text-gray-500"
+                  size={16}
+                />
+                {filteredSuggestions.length > 0 && (
+                  <ul className="absolute z-50 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg text-sm max-h-60 overflow-y-auto">
+                    {filteredSuggestions.map((suggestion, index) => (
+                      <li
+                        key={index}
+                        className="px-4 py-2 hover:bg-indigo-100 cursor-pointer"
+                        onClick={() => setSearchQuery(suggestion)}
+                      >
+                        {suggestion}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+
             <nav className="ml-10 flex items-center space-x-10">
               {navLinks.map((link) =>
                 link.children ? (
@@ -112,8 +170,6 @@ function Navbar() {
                 )
               )}
             </nav>
-            <div></div>
-            <div></div>
           </div>
         </div>
       </header>
@@ -121,6 +177,46 @@ function Navbar() {
       {/* Mobile Top Title */}
       <div className="md:hidden bg-white shadow-sm px-4 py-3 text-xl font-bold text-indigo-600 text-center">
         Interior 5D
+      </div>
+
+      {/* Search Input (Mobile) */}
+      {/* <div className="md:hidden bg-white px-4 py-2">
+        <div className="relative">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search..."
+            className="pl-10 pr-4 py-1.5 w-full border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          <Search className="absolute left-3 top-2.5 text-gray-500" size={16} />
+        </div
+      </div> */}
+
+      <div className="md:hidden bg-white px-4 py-2">
+        <div className="relative ">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search..."
+            className="w-full pl-10 pr-4 py-1.5 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          <Search className="absolute left-3 top-2.5 text-gray-500" size={16} />
+          {filteredSuggestions.length > 0 && (
+            <ul className="absolute z-50 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg text-sm max-h-60 overflow-y-auto">
+              {filteredSuggestions.map((suggestion, index) => (
+                <li
+                  key={index}
+                  className="px-4 py-2 hover:bg-indigo-100 cursor-pointer"
+                  onClick={() => setSearchQuery(suggestion)}
+                >
+                  {suggestion}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
 
       {/* Mobile Bottom Navbar */}
