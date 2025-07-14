@@ -1,172 +1,338 @@
-// The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
-
-import React, { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import api from './api';
 
 const DesignDetailPage = () => {
-  const [isFavorite, setIsFavorite] = useState(false);
+	const { id } = useParams();
+	const [product, setProduct] = useState(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState('');
+	const [isFavorite, setIsFavorite] = useState(false);
 
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
-  };
+	useEffect(() => {
+		const fetchProduct = async () => {
+			try {
+				console.log('🔍 Fetching product with ID:', id);
+				setLoading(true);
+				setError('');
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto max-w-7xl px-4 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          {/* Left Column - Product Image */}
-          <div className="relative h-[500px] lg:h-[800px] rounded-xl overflow-hidden shadow-lg">
-            <img
-              src="https://readdy.ai/api/search-image?query=Modern%20U-shaped%20kitchen%20with%20marigold%20yellow%20cabinets%2C%20white%20contrast%20elements%2C%20marble%20countertops%2C%20under-cabinet%20lighting%2C%20sleek%20appliances%2C%20minimalist%20hardware%2C%20spacious%20layout%2C%20bright%20natural%20lighting%2C%20clean%20lines%2C%20contemporary%20design&width=700&height=1000&seq=1&orientation=portrait"
-              alt="Marigold U-Shaped Modern Kitchen Design"
-              className="w-full h-full object-cover object-top"
-            />
-          </div>
+				const response = await api.products.getProductById(id);
 
-          {/* Right Column - Product Details */}
-          <div className="relative">
-            {/* Floating Share and Favorite Buttons */}
-            <div className="absolute top-0 right-0 flex space-x-3">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-full !rounded-button cursor-pointer"
-              >
-                <i className="fas fa-share-alt text-gray-600"></i>
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-full !rounded-button cursor-pointer"
-                onClick={toggleFavorite}
-              >
-                <i
-                  className={`${
-                    isFavorite
-                      ? "fas fa-heart text-red-500"
-                      : "far fa-heart text-gray-600"
-                  }`}
-                ></i>
-              </Button>
-            </div>
+				console.log('🔍 Product response:', response);
 
-            {/* Product Title */}
-            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 pr-20 mb-6 leading-tight">
-              Marigold U-Shaped Modern Kitchen Design with White Contrast and
-              Warm Lighting
-            </h1>
+				if (response.success && response.product) {
+					console.log('✅ Product loaded:', response.product);
+					setProduct(response.product);
+				} else {
+					console.error('❌ Product not found in response');
+					setError('Product not found');
+				}
+			} catch (error) {
+				console.error('❌ Failed to fetch product:', error);
+				setError('Failed to load product details');
+			} finally {
+				setLoading(false);
+			}
+		};
 
-            {/* Badges */}
-            <div className="flex flex-wrap gap-3 mb-8">
-              <Badge className="px-4 py-2 bg-amber-100 text-amber-800 hover:bg-amber-200 !rounded-button whitespace-nowrap cursor-pointer">
-                <i className="fas fa-palette mr-2"></i> Customisable Designs
-              </Badge>
-              <Badge className="px-4 py-2 bg-blue-100 text-blue-800 hover:bg-blue-200 !rounded-button whitespace-nowrap cursor-pointer">
-                <i className="fas fa-shield-alt mr-2"></i> Flat 10 year warranty
-              </Badge>
-              <Badge className="px-4 py-2 bg-green-100 text-green-800 hover:bg-green-200 !rounded-button whitespace-nowrap cursor-pointer">
-                <i className="fas fa-credit-card mr-2"></i> Easy EMIs
-              </Badge>
-              <Badge className="px-4 py-2 bg-purple-100 text-purple-800 hover:bg-purple-200 !rounded-button whitespace-nowrap cursor-pointer">
-                <i className="fas fa-truck mr-2"></i> 45 day delivery
-              </Badge>
-              <Badge className="px-4 py-2 bg-yellow-100 text-yellow-800 hover:bg-yellow-200 !rounded-button whitespace-nowrap cursor-pointer">
-                <i className="fas fa-star mr-2"></i> 4.5 rating
-              </Badge>
-            </div>
+		if (id) {
+			fetchProduct();
+		}
+	}, [id]);
 
-            <Card className="p-6 mb-8 shadow-sm border border-gray-200">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-5">
-                Kitchen Design Details
-              </h2>
+	const toggleFavorite = () => {
+		setIsFavorite(!isFavorite);
+	};
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">Layout</p>
-                  <p className="text-base font-medium">
-                    U Shaped Kitchen Design
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">Room Dimension</p>
-                  <p className="text-base font-medium">14x12 feet</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">Style</p>
-                  <p className="text-base font-medium">Modern</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">Colour</p>
-                  <p className="text-base font-medium">
-                    <span className="inline-block w-4 h-4 bg-amber-400 rounded-full mr-2 align-middle"></span>
-                    Marigold (Base & Wall units)
-                  </p>
-                </div>
-              </div>
+	const formatPrice = (priceRange) => {
+		if (!priceRange || (!priceRange.min && !priceRange.max)) {
+			return 'Price on Request';
+		}
 
-              <Separator className="my-4" />
+		const currency = priceRange.currency || 'INR';
+		const symbol = currency === 'INR' ? '₹' : '$';
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">Shutter finish</p>
-                  <p className="text-base font-medium">
-                    Laminate in suede finish
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">
-                    Countertop Material
-                  </p>
-                  <p className="text-base font-medium">Marble</p>
-                </div>
-              </div>
-            </Card>
+		if (priceRange.min && priceRange.max) {
+			return `${symbol}${priceRange.min.toLocaleString()} - ${symbol}${priceRange.max.toLocaleString()}`;
+		} else if (priceRange.min) {
+			return `Starting ${symbol}${priceRange.min.toLocaleString()}`;
+		} else {
+			return 'Price on Request';
+		}
+	};
 
-            <div className="mb-8">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">
-                Storage Features
-              </h3>
-              <ul className="space-y-2 pl-1">
-                <li className="flex items-start">
-                  <i className="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                  <span>Pull-out pantry with adjustable shelves</span>
-                </li>
-                <li className="flex items-start">
-                  <i className="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                  <span>
-                    Corner carousel units for maximum space utilization
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <i className="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                  <span>Soft-close drawers with cutlery organizers</span>
-                </li>
-                <li className="flex items-start">
-                  <i className="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                  <span>Overhead cabinets with lift-up doors</span>
-                </li>
-                <li className="flex items-start">
-                  <i className="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                  <span>Integrated waste sorting system</span>
-                </li>
-                <li className="flex items-start">
-                  <i className="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-                  <span>Dedicated spice rack and bottle pull-outs</span>
-                </li>
-              </ul>
-            </div>
+	// ✅ FIXED: Better image URL handling
+	const getProductImage = (product) => {
+		// Use processed imageUrl first, then fallback to thumbnailImage, then placeholder
+		return (
+			product.imageUrl || product.thumbnailImage || '/placeholder-image.jpg'
+		);
+	};
 
-            <Button className="w-full py-6 text-lg bg-amber-500 hover:bg-amber-600 text-white !rounded-button whitespace-nowrap cursor-pointer">
-              Request Consultation
-            </Button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+	const getGalleryImages = (product) => {
+		// Use processed galleryUrls first, then fallback to galleryImages
+		return product.galleryUrls || product.galleryImages || [];
+	};
+
+	if (loading) {
+		return (
+			<div className="min-h-screen bg-gray-50 flex items-center justify-center">
+				<div className="text-center">
+					<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500 mx-auto mb-4"></div>
+					<p className="text-gray-600">Loading design details...</p>
+				</div>
+			</div>
+		);
+	}
+
+	if (error || !product) {
+		return (
+			<div className="min-h-screen bg-gray-50 flex items-center justify-center">
+				<div className="text-center p-8 bg-white rounded-lg shadow-lg">
+					<div className="text-red-500 text-6xl mb-4">⚠️</div>
+					<h2 className="text-2xl font-bold text-gray-900 mb-4">
+						Product Not Found
+					</h2>
+					<p className="text-red-600 mb-6">{error}</p>
+					<div className="mt-4 p-4 bg-yellow-50 rounded-lg">
+						<p className="text-sm text-yellow-800">
+							<strong>Debug Info:</strong>
+							<br />
+							Product ID: {id}
+							<br />
+							Error: {error}
+						</p>
+					</div>
+					<Button
+						onClick={() => window.history.back()}
+						className="bg-amber-500 hover:bg-amber-600 text-white mt-4">
+						Go Back
+					</Button>
+				</div>
+			</div>
+		);
+	}
+
+	const galleryImages = getGalleryImages(product);
+
+	return (
+		<div className="min-h-screen bg-gray-50">
+			<div className="container mx-auto max-w-7xl px-4 py-12">
+				{/* Debug Panel - Remove in production */}
+				<div className="mb-4 p-4 bg-blue-50 rounded-lg">
+					<h3 className="font-bold text-blue-800 mb-2">🔍 Debug Information</h3>
+					<div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+						<div>
+							<strong>Product ID:</strong> {id}
+						</div>
+						<div>
+							<strong>Product Name:</strong> {product.name}
+						</div>
+						<div>
+							<strong>Image URL:</strong>{' '}
+							{getProductImage(product) ? 'Available' : 'Missing'}
+						</div>
+						<div>
+							<strong>Gallery Images:</strong> {galleryImages.length}
+						</div>
+					</div>
+				</div>
+
+				<div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+					{/* ✅ FIXED: Image section with proper URL handling */}
+					<div className="relative h-[500px] lg:h-[800px] rounded-xl overflow-hidden shadow-lg">
+						<img
+							src={getProductImage(product)}
+							alt={product.name}
+							className="w-full h-full object-cover object-top"
+							onError={(e) => {
+								console.warn(`❌ Image failed to load: ${e.target.src}`);
+								e.target.src = '/placeholder-image.jpg';
+							}}
+							onLoad={() => {
+								console.log('✅ Main image loaded successfully');
+							}}
+						/>
+
+						{/* ✅ FIXED: Gallery images with proper URL handling */}
+						{galleryImages && galleryImages.length > 0 && (
+							<div className="absolute bottom-4 left-4 flex space-x-2">
+								{galleryImages.slice(0, 3).map((image, index) => (
+									<div
+										key={index}
+										className="w-12 h-12 rounded-lg overflow-hidden border-2 border-white">
+										<img
+											src={image}
+											alt={`Gallery ${index + 1}`}
+											className="w-full h-full object-cover"
+											onError={(e) => {
+												console.warn(
+													`❌ Gallery image ${index + 1} failed to load: ${
+														e.target.src
+													}`
+												);
+												e.target.src = '/placeholder-image.jpg';
+											}}
+										/>
+									</div>
+								))}
+								{galleryImages.length > 3 && (
+									<div className="w-12 h-12 rounded-lg bg-black bg-opacity-50 border-2 border-white flex items-center justify-center">
+										<span className="text-white text-xs font-semibold">
+											+{galleryImages.length - 3}
+										</span>
+									</div>
+								)}
+							</div>
+						)}
+					</div>
+
+					{/* Product details section - unchanged */}
+					<div className="relative">
+						<div className="absolute top-0 right-0 flex space-x-3">
+							<Button
+								variant="ghost"
+								size="icon"
+								className="rounded-full !rounded-button cursor-pointer">
+								<i className="fas fa-share-alt text-gray-600"></i>
+							</Button>
+							<Button
+								variant="ghost"
+								size="icon"
+								className="rounded-full !rounded-button cursor-pointer"
+								onClick={toggleFavorite}>
+								<i
+									className={`${
+										isFavorite
+											? 'fas fa-heart text-red-500'
+											: 'far fa-heart text-gray-600'
+									}`}></i>
+							</Button>
+						</div>
+
+						<h1 className="text-3xl lg:text-4xl font-bold text-gray-900 pr-20 mb-6 leading-tight">
+							{product.name}
+						</h1>
+
+						<div className="flex flex-wrap gap-3 mb-8">
+							<Badge className="px-4 py-2 bg-amber-100 text-amber-800 hover:bg-amber-200 !rounded-button whitespace-nowrap cursor-pointer">
+								<i className="fas fa-palette mr-2"></i> Customisable Designs
+							</Badge>
+							{product.rating && (
+								<Badge className="px-4 py-2 bg-yellow-100 text-yellow-800 hover:bg-yellow-200 !rounded-button whitespace-nowrap cursor-pointer">
+									<i className="fas fa-star mr-2"></i> {product.rating} rating
+								</Badge>
+							)}
+							{product.durationEstimate && (
+								<Badge className="px-4 py-2 bg-purple-100 text-purple-800 hover:bg-purple-200 !rounded-button whitespace-nowrap cursor-pointer">
+									<i className="fas fa-truck mr-2"></i>{' '}
+									{product.durationEstimate} delivery
+								</Badge>
+							)}
+							<Badge className="px-4 py-2 bg-blue-100 text-blue-800 hover:bg-blue-200 !rounded-button whitespace-nowrap cursor-pointer">
+								<i className="fas fa-shield-alt mr-2"></i> Flat 10 year warranty
+							</Badge>
+							<Badge className="px-4 py-2 bg-green-100 text-green-800 hover:bg-green-200 !rounded-button whitespace-nowrap cursor-pointer">
+								<i className="fas fa-credit-card mr-2"></i> Easy EMIs
+							</Badge>
+						</div>
+
+						<Card className="p-6 mb-8 shadow-sm border border-gray-200">
+							<h2 className="text-2xl font-semibold text-gray-800 mb-5">
+								{product.category} Design Details
+							</h2>
+
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+								<div>
+									<p className="text-sm text-gray-500 mb-1">Category</p>
+									<p className="text-base font-medium">{product.category}</p>
+								</div>
+								<div>
+									<p className="text-sm text-gray-500 mb-1">Price Range</p>
+									<p className="text-base font-medium">
+										{formatPrice(product.priceRange)}
+									</p>
+								</div>
+								<div>
+									<p className="text-sm text-gray-500 mb-1">Vendor</p>
+									<p className="text-base font-medium">{product.vendorName}</p>
+								</div>
+								<div>
+									<p className="text-sm text-gray-500 mb-1">Duration</p>
+									<p className="text-base font-medium">
+										{product.durationEstimate || 'Contact for details'}
+									</p>
+								</div>
+							</div>
+
+							<Separator className="my-4" />
+
+							<div className="mb-4">
+								<p className="text-sm text-gray-500 mb-2">Description</p>
+								<p className="text-base">{product.shortDescription}</p>
+							</div>
+
+							{product.materialsUsed && product.materialsUsed.length > 0 && (
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+									<div>
+										<p className="text-sm text-gray-500 mb-1">Materials Used</p>
+										<p className="text-base font-medium">
+											{product.materialsUsed.join(', ')}
+										</p>
+									</div>
+									{product.consultationFee > 0 && (
+										<div>
+											<p className="text-sm text-gray-500 mb-1">
+												Consultation Fee
+											</p>
+											<p className="text-base font-medium">
+												₹{product.consultationFee.toLocaleString()}
+											</p>
+										</div>
+									)}
+								</div>
+							)}
+						</Card>
+
+						{product.features && product.features.length > 0 && (
+							<div className="mb-8">
+								<h3 className="text-xl font-semibold text-gray-800 mb-4">
+									Key Features
+								</h3>
+								<ul className="space-y-2 pl-1">
+									{product.features.map((feature, index) => (
+										<li key={index} className="flex items-start">
+											<i className="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+											<span>{feature}</span>
+										</li>
+									))}
+								</ul>
+							</div>
+						)}
+
+						{product.fullDescription && (
+							<div className="mb-8">
+								<h3 className="text-xl font-semibold text-gray-800 mb-4">
+									Detailed Description
+								</h3>
+								<p className="text-gray-700 leading-relaxed">
+									{product.fullDescription}
+								</p>
+							</div>
+						)}
+
+						<Button className="w-full py-6 text-lg bg-amber-500 hover:bg-amber-600 text-white !rounded-button whitespace-nowrap cursor-pointer">
+							Request Consultation
+						</Button>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default DesignDetailPage;
