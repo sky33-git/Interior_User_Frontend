@@ -62,11 +62,42 @@ const VenderDetail = () => {
 
 	const [activeSection, setActiveSection] = useState('about');
 
-	// ✅ FIXED: Helper function to get profile image URL
-	const getProfileImageUrl = (profileImage) => {
-		if (!profileImage) return null;
-		if (profileImage.startsWith('http')) return profileImage;
-		return `https://res.cloudinary.com/dbpjwgvst/image/upload/c_fill,f_auto,h_400,q_auto,w_400/v1/${profileImage}`;
+	// ✅ ENHANCED: Comprehensive image URL processing function
+	const processImageUrl = (
+		imageUrl,
+		transformations = 'c_fill,f_auto,h_400,q_auto,w_400'
+	) => {
+		if (!imageUrl) return null;
+
+		// If it's already a full HTTP URL (Pexels, external sources, or complete Cloudinary URL)
+		if (imageUrl.startsWith('http')) {
+			return imageUrl;
+		}
+
+		// If it's a Cloudinary public_id (contains folder structure like "vendor-profiles/abc123")
+		if (imageUrl.includes('/') && !imageUrl.startsWith('http')) {
+			return `https://res.cloudinary.com/dbpjwgvst/image/upload/${transformations}/v1/${imageUrl}`;
+		}
+
+		// If it's just a filename or old format, assume it's in a default folder
+		return `https://res.cloudinary.com/dbpjwgvst/image/upload/${transformations}/v1/${imageUrl}`;
+	};
+
+	// ✅ ENHANCED: Specific functions for different image types
+	const getProfileImageUrl = (imageUrl) => {
+		return processImageUrl(imageUrl, 'c_fill,f_auto,h_400,q_auto,w_400');
+	};
+
+	const getCoverImageUrl = (imageUrl) => {
+		return processImageUrl(imageUrl, 'c_fill,f_auto,h_300,q_auto,w_1200');
+	};
+
+	const getPortfolioImageUrl = (imageUrl) => {
+		return processImageUrl(imageUrl, 'c_fill,f_auto,h_300,q_auto,w_400');
+	};
+
+	const getReviewImageUrl = (imageUrl) => {
+		return processImageUrl(imageUrl, 'c_fill,f_auto,h_100,q_auto,w_100');
 	};
 
 	// Fetch vendor data from backend
@@ -78,6 +109,8 @@ const VenderDetail = () => {
 				const response = await api.vendors.getVendorById(id);
 				if (response.success && response.data?.vendor) {
 					setVendor(response.data.vendor);
+					console.log('✅ Vendor data loaded:', response.data.vendor);
+					console.log('✅ Vendor images:', response.data.vendor.images);
 				} else {
 					setError('Vendor not found');
 				}
@@ -362,25 +395,38 @@ const VenderDetail = () => {
 	return (
 		<div className="min-h-screen bg-gray-50">
 			<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-				{/* ✅ REVERTED: Simple Hero Section with Template Cover */}
+				{/* ✅ FIXED: Hero Section with Dynamic Cover Image */}
 				<div className="bg-white rounded-lg shadow-sm mb-6 overflow-hidden">
-					{/* ✅ FIXED: Simple template cover image instead of colorful gradient */}
+					{/* ✅ FIXED: Dynamic cover image with fallback */}
 					<div className="relative h-48 bg-gray-100">
-						<img
-							src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-							alt="Cover"
-							className="w-full h-full object-cover"
-						/>
-						<div className="absolute inset-0 bg-black bg-opacity-10"></div>
+						{vendor.images?.coverImage ? (
+							<img
+								src={getCoverImageUrl(vendor.images.coverImage)}
+								alt={`${vendor.name} Cover`}
+								className="w-full h-full object-cover"
+								onError={(e) => {
+									// Fallback to default cover image if vendor's cover fails to load
+									e.target.src =
+										'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80';
+								}}
+							/>
+						) : (
+							<img
+								src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+								alt="Default Cover"
+								className="w-full h-full object-cover"
+							/>
+						)}
+						<div className="absolute inset-0 bg-black bg-opacity-20"></div>
 					</div>
 
 					<div className="relative px-6 pb-6">
 						<div className="flex flex-col sm:flex-row sm:items-end sm:space-x-6">
-							{/* ✅ FIXED: Profile image with proper URL handling */}
+							{/* ✅ FIXED: Profile image with proper data structure access */}
 							<div className="relative -mt-16 mb-4 sm:mb-0 flex justify-center sm:justify-start">
 								<Avatar className="w-32 h-32 border-4 border-white shadow-lg">
 									<AvatarImage
-										src={getProfileImageUrl(vendor.profileImage)}
+										src={getProfileImageUrl(vendor.images?.profileImage)}
 										alt={vendor.name}
 										className="object-cover"
 									/>
@@ -483,32 +529,71 @@ const VenderDetail = () => {
 									<p className="text-gray-600">
 										📍 {formatAddress(vendor.location)}
 									</p>
+									{vendor.phone && (
+										<p className="text-gray-600">📞 {vendor.phone}</p>
+									)}
+									{vendor.email && (
+										<p className="text-gray-600">✉️ {vendor.email}</p>
+									)}
+								</div>
+							</div>
+
+							{/* ✅ ADDED: Additional vendor info */}
+							<div>
+								<h3 className="text-lg font-semibold text-gray-900 mb-3">
+									Professional Details
+								</h3>
+								<div className="space-y-2 text-sm">
+									{vendor.professionType && (
+										<p className="text-gray-600">👔 {vendor.professionType}</p>
+									)}
+									{vendor.license && (
+										<p className="text-gray-600">
+											📜 License: {vendor.license}
+										</p>
+									)}
+									{vendor.budgetLevel && (
+										<p className="text-gray-600">
+											💰 Budget Level: {vendor.budgetLevel}
+										</p>
+									)}
 								</div>
 							</div>
 						</div>
 					</section>
 
-					{/* Projects Section */}
+					{/* ✅ FIXED: Projects Section with correct portfolio data access */}
 					<section id="projects" className="bg-white rounded-lg shadow-sm p-6">
 						<h2 className="text-2xl font-bold text-gray-900 mb-4">Projects</h2>
-						{vendor.portfolioImages && vendor.portfolioImages.length > 0 ? (
+						{vendor.images?.portfolio && vendor.images.portfolio.length > 0 ? (
 							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-								{vendor.portfolioImages.map((image, index) => (
+								{vendor.images.portfolio.map((image, index) => (
 									<div
 										key={index}
-										className="aspect-square bg-gray-200 rounded-lg overflow-hidden">
+										className="aspect-square bg-gray-200 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
 										<img
-											src={getProfileImageUrl(image)}
-											alt={`Project ${index + 1}`}
-											className="w-full h-full object-cover hover:scale-105 transition-transform"
+											src={getPortfolioImageUrl(image)}
+											alt={`${vendor.name} Project ${index + 1}`}
+											className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+											onError={(e) => {
+												// Fallback to placeholder if image fails to load
+												e.target.src =
+													'https://via.placeholder.com/400x400?text=Portfolio+Image';
+											}}
 										/>
 									</div>
 								))}
 							</div>
 						) : (
-							<p className="text-gray-500 text-center py-8">
-								No portfolio images available
-							</p>
+							<div className="text-center py-12">
+								<div className="text-gray-400 text-6xl mb-4">🎨</div>
+								<p className="text-gray-500 text-lg mb-2">
+									No portfolio images available
+								</p>
+								<p className="text-gray-400 text-sm">
+									This vendor hasn't uploaded any project showcases yet.
+								</p>
+							</div>
 						)}
 					</section>
 
@@ -539,19 +624,47 @@ const VenderDetail = () => {
 										</span>
 									</p>
 								)}
+								{vendor.budgetLevel && (
+									<p className="text-sm">
+										<span className="font-medium text-gray-700">
+											Budget Level:
+										</span>{' '}
+										<span className="text-gray-600">{vendor.budgetLevel}</span>
+									</p>
+								)}
 							</div>
 
 							<div className="space-y-3">
-								<p className="text-sm">
-									<span className="font-medium text-gray-700">
-										Service Areas:
-									</span>{' '}
-									<span className="text-gray-600">
-										{vendor.serviceAreas?.length > 0
-											? vendor.serviceAreas.join(', ')
-											: 'All types of projects'}
-									</span>
-								</p>
+								{vendor.languages && vendor.languages.length > 0 && (
+									<p className="text-sm">
+										<span className="font-medium text-gray-700">
+											Languages:
+										</span>{' '}
+										<span className="text-gray-600">
+											{vendor.languages.join(', ')}
+										</span>
+									</p>
+								)}
+								{vendor.projectTypes && vendor.projectTypes.length > 0 && (
+									<p className="text-sm">
+										<span className="font-medium text-gray-700">
+											Project Types:
+										</span>{' '}
+										<span className="text-gray-600">
+											{vendor.projectTypes.join(', ')}
+										</span>
+									</p>
+								)}
+								{vendor.styles && vendor.styles.length > 0 && (
+									<p className="text-sm">
+										<span className="font-medium text-gray-700">
+											Design Styles:
+										</span>{' '}
+										<span className="text-gray-600">
+											{vendor.styles.join(', ')}
+										</span>
+									</p>
+								)}
 							</div>
 						</div>
 					</section>
@@ -580,6 +693,37 @@ const VenderDetail = () => {
 									</span>
 								</div>
 							)}
+							{vendor.credentials && vendor.credentials.length > 0 && (
+								<div className="space-y-2">
+									<h3 className="text-sm font-medium text-gray-700">
+										Professional Credentials:
+									</h3>
+									{vendor.credentials.map((credential, index) => (
+										<div key={index} className="flex items-center space-x-2">
+											<span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
+											<span className="text-sm text-gray-700">
+												{credential}
+											</span>
+										</div>
+									))}
+								</div>
+							)}
+							{vendor.businessHighlights &&
+								vendor.businessHighlights.length > 0 && (
+									<div className="space-y-2">
+										<h3 className="text-sm font-medium text-gray-700">
+											Business Highlights:
+										</h3>
+										{vendor.businessHighlights.map((highlight, index) => (
+											<div key={index} className="flex items-center space-x-2">
+												<span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+												<span className="text-sm text-gray-700">
+													{highlight}
+												</span>
+											</div>
+										))}
+									</div>
+								)}
 						</div>
 					</section>
 
@@ -606,7 +750,7 @@ const VenderDetail = () => {
 												<Avatar className="w-10 h-10">
 													<AvatarImage
 														src={getProfileImageUrl(
-															review.userId?.profileImage
+															review.userId?.images?.profileImage
 														)}
 														alt={review.userId?.name || 'User'}
 													/>
@@ -636,9 +780,13 @@ const VenderDetail = () => {
 															{review.images.slice(0, 3).map((image, idx) => (
 																<img
 																	key={idx}
-																	src={getProfileImageUrl(image)}
+																	src={getReviewImageUrl(image)}
 																	alt={`Review ${idx + 1}`}
 																	className="w-16 h-16 object-cover rounded"
+																	onError={(e) => {
+																		e.target.src =
+																			'https://via.placeholder.com/100x100?text=Review+Image';
+																	}}
 																/>
 															))}
 														</div>
@@ -675,9 +823,15 @@ const VenderDetail = () => {
 						<h2 className="text-2xl font-bold text-gray-900 mb-4">
 							Inspiration from {vendor.name}
 						</h2>
-						<p className="text-gray-500 text-center py-8">
-							No ideabooks available
-						</p>
+						<div className="text-center py-8">
+							<div className="text-gray-400 text-6xl mb-4">💡</div>
+							<p className="text-gray-500 text-lg mb-2">
+								No ideabooks available
+							</p>
+							<p className="text-gray-400 text-sm">
+								This vendor hasn't created any ideabooks yet.
+							</p>
+						</div>
 					</section>
 				</div>
 			</div>
