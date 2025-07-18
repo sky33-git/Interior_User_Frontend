@@ -1155,10 +1155,42 @@ export const reviewsAPI = {
 		}
 	},
 };
+// ====================== USER PROFILE API ======================
+export const userAPI = {
+	getUserProfile: async () => {
+		try {
+			const response = await apiRequest('/users/profile', {}, 0, 3);
+			return response;
+		} catch (error) {
+			console.error('Get user profile error:', error);
+			throw error;
+		}
+	},
+
+	updateUserProfile: async (profileData) => {
+		try {
+			const response = await apiRequest(
+				'/users/profile',
+				{
+					method: 'PUT',
+					body: profileData,
+					headers: {},
+				},
+				0,
+				3
+			);
+			return response;
+		} catch (error) {
+			console.error('Update user profile error:', error);
+			throw error;
+		}
+	},
+};
 
 // ====================== DEFAULT EXPORT ======================
 export default {
 	auth: authAPI,
+	users: userAPI,
 	categories: categoryAPI,
 	products: productsAPI,
 	vendors: vendorsAPI,

@@ -9,10 +9,10 @@ import Footer from './Footer';
 import { default as Gallery, default as Ideas } from './Ideas';
 import './index.css';
 import Login from './Login';
-import Messages from './Messages'; // ✅ NEW: Import Messages component
+import Messages from './Messages';
 import Navbar from './Navbar';
 import Home from './pages/Home';
-import Profile from './Profile'; // ✅ NEW: Import Profile component
+import Profile from './Profile';
 import ProtectedRoute from './ProtectedRoute';
 import Resources from './Resources';
 import Search from './SearchAi';
@@ -38,7 +38,6 @@ function AppContent() {
 			<div className="pt-16">
 				<Routes>
 					<Route path="/" element={<Home />} />
-					<Route path="/pros" element={<FindPros />} />
 					<Route path="/test" element={<Test />} />
 					<Route path="/feature" element={<Feature />} />
 					<Route path="/resources" element={<Resources />} />
@@ -50,6 +49,14 @@ function AppContent() {
 					<Route path="/login" element={<Login />} />
 
 					{/* Protected Routes */}
+					<Route
+						path="/pros"
+						element={
+							<ProtectedRoute>
+								<FindPros />
+							</ProtectedRoute>
+						}
+					/>
 					<Route
 						path="/ideas"
 						element={
@@ -75,7 +82,6 @@ function AppContent() {
 						}
 					/>
 
-					{/* ✅ NEW: User Profile and Messages Protected Routes */}
 					<Route
 						path="/profile"
 						element={
@@ -84,14 +90,14 @@ function AppContent() {
 							</ProtectedRoute>
 						}
 					/>
-					<Route
+					{/* <Route
 						path="/messages"
 						element={
 							<ProtectedRoute>
 								<Messages />
 							</ProtectedRoute>
 						}
-					/>
+					/> */}
 				</Routes>
 			</div>
 			<Footer />

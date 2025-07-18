@@ -105,9 +105,12 @@ const DesignPage = () => {
 			console.log('🔍 Starting data fetch for:', urlCategory);
 
 			let categoryTitle = null;
-
-			// Get all categories first
 			const categoriesResponse = await api.categories.getAllCategories();
+			console.log('🔍 Categories API Response:', categoriesResponse);
+			console.log(
+				'🔍 Categories API Resposse Category platform:',
+				categoriesResponse.data[0].categoryType
+			);
 			let categoriesList = [];
 
 			if (categoriesResponse.success && categoriesResponse.data) {
@@ -115,8 +118,6 @@ const DesignPage = () => {
 				setCategories(categoriesList);
 				console.log('✅ Categories loaded:', categoriesList.length);
 			}
-
-			// ✅ ENHANCED: Better category resolution
 			if (urlCategory && urlCategory !== 'all') {
 				const foundCategory = resolveCategory(urlCategory, categoriesList);
 				if (foundCategory) {

@@ -6,12 +6,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Filter, Mail, MapPin, Phone, Search, Star, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import api from './api';
-
 const DesignIdeas = () => {
 	const navigate = useNavigate();
-
+	const [searchParams] = useSearchParams();
 	// State management
 	const [vendors, setVendors] = useState([]);
 	const [categories, setCategories] = useState([]);
@@ -26,7 +25,7 @@ const DesignIdeas = () => {
 		category: '',
 		city: '',
 		state: '',
-		professionType: '',
+		professionType: searchParams.get('profession') || '',
 		budgetLevel: '',
 		rating: '',
 		search: '',
@@ -39,10 +38,12 @@ const DesignIdeas = () => {
 		const fetchCategories = async () => {
 			try {
 				setCategoriesLoading(true);
-				const response = await api.categories.getAllCategories('platform');
+				const response = await api.categories.getAllCategories();
 				if (response.success && response.data) {
-					setCategories(response.data);
-					console.log('✅ Categories loaded:', response.data.length);
+					const filteredCategories = response.data.filter(
+						(category) => category.categoryType === 'platform'
+					);
+					setCategories(filteredCategories);
 				}
 			} catch (error) {
 				console.error('Failed to fetch categories:', error);
@@ -62,8 +63,6 @@ const DesignIdeas = () => {
 
 		return () => clearTimeout(debounceTimer);
 	}, [filters]);
-
-	// ✅ Apply filters to vendor search
 	const applyFilters = async () => {
 		try {
 			setLoading(true);
@@ -105,7 +104,7 @@ const DesignIdeas = () => {
 			category: '',
 			city: '',
 			state: '',
-			professionType: '',
+			professionType: searchParams.get('profession') || '',
 			budgetLevel: '',
 			rating: '',
 			search: '',
@@ -113,6 +112,15 @@ const DesignIdeas = () => {
 			limit: 12,
 		});
 	};
+	useEffect(() => {
+		const professionFromUrl = searchParams.get('profession');
+		if (professionFromUrl) {
+			setFilters((prev) => ({
+				...prev,
+				professionType: professionFromUrl,
+			}));
+		}
+	}, [searchParams]);
 
 	// ✅ Pagination handler
 	const handlePageChange = (newPage) => {
@@ -240,7 +248,7 @@ const DesignIdeas = () => {
 								</div>
 
 								{/* ✅ Fixed Rating Filter */}
-								<div className="space-y-2">
+								{/* <div className="space-y-2">
 									<Label htmlFor="rating">Minimum Rating</Label>
 									<select
 										id="rating"
@@ -257,7 +265,7 @@ const DesignIdeas = () => {
 										<option value="2.5">2.5 ⭐ & above</option>
 										<option value="2.0">2.0 ⭐ & above</option>
 									</select>
-								</div>
+								</div> */}
 
 								{/* ✅ Location Search */}
 								<div className="space-y-2">
@@ -271,7 +279,7 @@ const DesignIdeas = () => {
 									/>
 								</div>
 
-								<div className="space-y-2">
+								{/* <div className="space-y-2">
 									<Label htmlFor="state">State</Label>
 									<Input
 										id="state"
@@ -282,10 +290,10 @@ const DesignIdeas = () => {
 											handleFilterChange('state', e.target.value)
 										}
 									/>
-								</div>
+								</div> */}
 
 								{/* ✅ Profession Type Filter */}
-								<div className="space-y-2">
+								{/* <div className="space-y-2">
 									<Label htmlFor="professionType">Profession Type</Label>
 									<select
 										id="professionType"
@@ -305,23 +313,114 @@ const DesignIdeas = () => {
 										</option>
 										<option value="Lighting Designer">Lighting Designer</option>
 									</select>
-								</div>
+								</div> */}
 
 								{/* ✅ Budget Level Filter */}
+								{/* ✅ Budget Level Slider */}
 								<div className="space-y-2">
 									<Label htmlFor="budgetLevel">Budget Level</Label>
-									<select
-										id="budgetLevel"
-										value={filters.budgetLevel}
-										onChange={(e) =>
-											handleFilterChange('budgetLevel', e.target.value)
-										}
-										className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-										<option value="">Any Budget</option>
-										<option value="Low">Low (₹10,000 - ₹50,000)</option>
-										<option value="Medium">Medium (₹50,000 - ₹2,00,000)</option>
-										<option value="High">High (₹2,00,000+)</option>
-									</select>
+									<div className="space-y-3">
+										<div className="relative">
+											<input
+												id="budgetLevel"
+												type="range"
+												min="0"
+												max="3"
+												step="1"
+												value={
+													filters.budgetLevel === 'Low'
+														? 1
+														: filters.budgetLevel === 'Medium'
+														? 2
+														: filters.budgetLevel === 'High'
+														? 3
+														: 0
+												}
+												onChange={(e) => {
+													const value = parseInt(e.target.value);
+													const budgetMapping = {
+														0: '',
+														1: 'Low',
+														2: 'Medium',
+														3: 'High',
+													};
+													handleFilterChange(
+														'budgetLevel',
+														budgetMapping[value]
+													);
+												}}
+												className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+												style={{
+													background: `linear-gradient(to right, 
+						#3b82f6 0%, 
+						#3b82f6 ${
+							((filters.budgetLevel === 'Low'
+								? 1
+								: filters.budgetLevel === 'Medium'
+								? 2
+								: filters.budgetLevel === 'High'
+								? 3
+								: 0) /
+								3) *
+							100
+						}%, 
+						#e5e7eb ${
+							((filters.budgetLevel === 'Low'
+								? 1
+								: filters.budgetLevel === 'Medium'
+								? 2
+								: filters.budgetLevel === 'High'
+								? 3
+								: 0) /
+								3) *
+							100
+						}%, 
+						#e5e7eb 100%)`,
+												}}
+											/>
+											{/* Slider thumb styling */}
+											<style jsx>{`
+												.slider::-webkit-slider-thumb {
+													appearance: none;
+													height: 20px;
+													width: 20px;
+													border-radius: 50%;
+													background: #3b82f6;
+													cursor: pointer;
+													border: 2px solid #ffffff;
+													box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+												}
+												.slider::-moz-range-thumb {
+													height: 20px;
+													width: 20px;
+													border-radius: 50%;
+													background: #3b82f6;
+													cursor: pointer;
+													border: 2px solid #ffffff;
+													box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+												}
+											`}</style>
+										</div>
+
+										<div className="flex justify-between text-xs text-gray-500">
+											<span>Any Budget</span>
+											<span>Low</span>
+											<span>Medium</span>
+											<span>High</span>
+										</div>
+
+										<div className="text-center">
+											<Badge variant="outline" className="text-sm">
+												{filters.budgetLevel === 'Low'
+													? 'Low (₹10,000 - ₹50,000)'
+													: filters.budgetLevel === 'Medium'
+													? 'Medium (₹50,000 - ₹2,00,000)'
+													: filters.budgetLevel === 'High'
+													? 'High (₹2,00,000+)'
+													: 'Any Budget'}
+											</Badge>
+										</div>
+									</div>
 								</div>
 							</CardContent>
 						</Card>
@@ -352,36 +451,34 @@ const DesignIdeas = () => {
 						</div>
 
 						{/* ✅ VENDOR GRID */}
+						{/* ✅ VENDOR LIST */}
 						{loading ? (
-							<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+							<div className="space-y-4">
 								{Array.from({ length: 6 }).map((_, index) => (
 									<Card key={index} className="animate-pulse">
 										<CardContent className="p-6">
-											<div className="flex items-center space-x-4 mb-4">
-												<div className="w-16 h-16 bg-gray-300 rounded-full"></div>
+											<div className="flex items-center space-x-4">
+												<div className="w-16 h-16 bg-gray-300 rounded-full flex-shrink-0"></div>
 												<div className="flex-1">
 													<div className="h-4 bg-gray-300 rounded mb-2"></div>
-													<div className="h-3 bg-gray-300 rounded w-3/4"></div>
+													<div className="h-3 bg-gray-300 rounded w-3/4 mb-2"></div>
+													<div className="h-3 bg-gray-300 rounded w-1/2"></div>
 												</div>
-											</div>
-											<div className="space-y-2">
-												<div className="h-3 bg-gray-300 rounded"></div>
-												<div className="h-3 bg-gray-300 rounded w-2/3"></div>
 											</div>
 										</CardContent>
 									</Card>
 								))}
 							</div>
 						) : vendors.length > 0 ? (
-							<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+							<div className="space-y-4">
 								{vendors.map((vendor) => (
 									<Card
 										key={vendor._id}
 										className="hover:shadow-lg transition-shadow cursor-pointer"
 										onClick={() => navigate(`/design-vendor/${vendor._id}`)}>
 										<CardContent className="p-6">
-											<div className="flex items-center space-x-4 mb-4">
-												<Avatar className="w-16 h-16">
+											<div className="flex items-start space-x-6">
+												<Avatar className="w-16 h-16 flex-shrink-0">
 													<AvatarImage
 														src={
 															vendor.profileImageUrl ||
@@ -393,81 +490,96 @@ const DesignIdeas = () => {
 														{vendor.name ? vendor.name[0].toUpperCase() : 'V'}
 													</AvatarFallback>
 												</Avatar>
+												{/* Main Content Section */}
 												<div className="flex-1">
-													<h3 className="font-semibold text-lg text-gray-900">
-														{vendor.name}
-													</h3>
-													<p className="text-gray-600 text-sm">
-														{vendor.title || vendor.professionType}
-													</p>
-													<div className="flex items-center gap-1 mt-1">
-														{renderStars(vendor.rating || 0)}
-														<span className="text-sm text-gray-500 ml-1">
-															({vendor.reviewCount || 0})
-														</span>
+													<div className="flex items-start justify-between">
+														<div className="flex-1">
+															<h3 className="font-semibold text-lg text-gray-900">
+																{vendor.name}
+															</h3>
+															<p className="text-gray-600 text-sm mb-2">
+																{vendor.title || vendor.professionType}
+															</p>
+															{/* <div className="flex items-center gap-1 mb-3">
+																{renderStars(vendor.rating || 0)}
+																<span className="text-sm text-gray-500 ml-1">
+																	({vendor.reviewCount || 0})
+																</span>
+															</div> */}
+														</div>
+
+														{/* Action Button */}
+														<Button variant="outline" size="sm">
+															View Profile
+														</Button>
+													</div>
+
+													{/* Contact Info */}
+													<div className="flex flex-wrap gap-4 mb-3 text-sm text-gray-600">
+														<div className="flex items-center gap-1">
+															<MapPin className="h-4 w-4" />
+															{vendor.location?.city ||
+																'Location not specified'}
+															{vendor.location?.state &&
+																`, ${vendor.location.state}`}
+														</div>
+														{vendor.phone && (
+															<div className="flex items-center gap-1">
+																<Phone className="h-4 w-4" />
+																{vendor.phone}
+															</div>
+														)}
+														{vendor.email && (
+															<div className="flex items-center gap-1">
+																<Mail className="h-4 w-4" />
+																{vendor.email}
+															</div>
+														)}
+													</div>
+
+													{/* Categories and Badges */}
+													<div className="flex items-center justify-between">
+														<div className="flex flex-wrap gap-1">
+															{vendor.categories &&
+																vendor.categories.length > 0 && (
+																	<>
+																		{vendor.categories
+																			.slice(0, 3)
+																			.map((category, index) => (
+																				<Badge
+																					key={index}
+																					variant="secondary"
+																					className="text-xs">
+																					{category}
+																				</Badge>
+																			))}
+																		{vendor.categories.length > 3 && (
+																			<Badge
+																				variant="outline"
+																				className="text-xs">
+																				+{vendor.categories.length - 3} more
+																			</Badge>
+																		)}
+																	</>
+																)}
+														</div>
+
+														<div className="flex items-center gap-2">
+															{vendor.isVerified && (
+																<Badge
+																	variant="default"
+																	className="bg-green-100 text-green-800 text-xs">
+																	Verified
+																</Badge>
+															)}
+															{vendor.budgetLevel && (
+																<Badge variant="outline" className="text-xs">
+																	{vendor.budgetLevel}
+																</Badge>
+															)}
+														</div>
 													</div>
 												</div>
-											</div>
-
-											<div className="space-y-2 mb-4">
-												<div className="flex items-center gap-2 text-sm text-gray-600">
-													<MapPin className="h-4 w-4" />
-													{vendor.location?.city || 'Location not specified'}
-													{vendor.location?.state &&
-														`, ${vendor.location.state}`}
-												</div>
-												{vendor.phone && (
-													<div className="flex items-center gap-2 text-sm text-gray-600">
-														<Phone className="h-4 w-4" />
-														{vendor.phone}
-													</div>
-												)}
-												{vendor.email && (
-													<div className="flex items-center gap-2 text-sm text-gray-600">
-														<Mail className="h-4 w-4" />
-														{vendor.email}
-													</div>
-												)}
-											</div>
-
-											{vendor.categories && vendor.categories.length > 0 && (
-												<div className="flex flex-wrap gap-1 mb-4">
-													{vendor.categories
-														.slice(0, 3)
-														.map((category, index) => (
-															<Badge
-																key={index}
-																variant="secondary"
-																className="text-xs">
-																{category}
-															</Badge>
-														))}
-													{vendor.categories.length > 3 && (
-														<Badge variant="outline" className="text-xs">
-															+{vendor.categories.length - 3} more
-														</Badge>
-													)}
-												</div>
-											)}
-
-											<div className="flex items-center justify-between">
-												<div className="flex items-center gap-2">
-													{vendor.isVerified && (
-														<Badge
-															variant="default"
-															className="bg-green-100 text-green-800 text-xs">
-															Verified
-														</Badge>
-													)}
-													{vendor.budgetLevel && (
-														<Badge variant="outline" className="text-xs">
-															{vendor.budgetLevel}
-														</Badge>
-													)}
-												</div>
-												<Button variant="outline" size="sm">
-													View Profile
-												</Button>
 											</div>
 										</CardContent>
 									</Card>

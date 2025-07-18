@@ -20,7 +20,6 @@ const VenderDetail = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
 
-	// Backend integration states
 	const [vendor, setVendor] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState('');
@@ -56,7 +55,7 @@ const VenderDetail = () => {
 		{ id: 'projects', label: 'Projects' },
 		{ id: 'business', label: 'Business' },
 		{ id: 'credentials', label: 'Credentials' },
-		{ id: 'reviews', label: 'Reviews' },
+		// { id: 'reviews', label: 'Reviews' },
 		{ id: 'ideabooks', label: 'Ideabooks' },
 	];
 
@@ -69,21 +68,17 @@ const VenderDetail = () => {
 	) => {
 		if (!imageUrl) return null;
 
-		// If it's already a full HTTP URL (Pexels, external sources, or complete Cloudinary URL)
 		if (imageUrl.startsWith('http')) {
 			return imageUrl;
 		}
 
-		// If it's a Cloudinary public_id (contains folder structure like "vendor-profiles/abc123")
 		if (imageUrl.includes('/') && !imageUrl.startsWith('http')) {
 			return `https://res.cloudinary.com/dbpjwgvst/image/upload/${transformations}/v1/${imageUrl}`;
 		}
 
-		// If it's just a filename or old format, assume it's in a default folder
 		return `https://res.cloudinary.com/dbpjwgvst/image/upload/${transformations}/v1/${imageUrl}`;
 	};
 
-	// ✅ ENHANCED: Specific functions for different image types
 	const getProfileImageUrl = (imageUrl) => {
 		return processImageUrl(imageUrl, 'c_fill,f_auto,h_400,q_auto,w_400');
 	};
@@ -100,7 +95,6 @@ const VenderDetail = () => {
 		return processImageUrl(imageUrl, 'c_fill,f_auto,h_100,q_auto,w_100');
 	};
 
-	// Fetch vendor data from backend
 	useEffect(() => {
 		const fetchVendorDetails = async () => {
 			try {
@@ -130,35 +124,33 @@ const VenderDetail = () => {
 		}
 	}, [id]);
 
-	// Fetch reviews separately
-	useEffect(() => {
-		const fetchReviews = async () => {
-			if (!id) return;
+	// useEffect(() => {
+	// 	const fetchReviews = async () => {
+	// 		if (!id) return;
 
-			try {
-				setReviewsLoading(true);
-				const response = await api.reviews.getVendorReviews(
-					id,
-					reviewsPage,
-					10
-				);
-				if (reviewsPage === 1) {
-					setReviews(response.reviews || []);
-				} else {
-					setReviews((prev) => [...prev, ...(response.reviews || [])]);
-				}
-				setTotalReviews(response.total || 0);
-			} catch (error) {
-				console.error('Failed to fetch reviews:', error);
-			} finally {
-				setReviewsLoading(false);
-			}
-		};
+	// 		try {
+	// 			setReviewsLoading(true);
+	// 			const response = await api.reviews.getVendorReviews(
+	// 				id,
+	// 				reviewsPage,
+	// 				10
+	// 			);
+	// 			if (reviewsPage === 1) {
+	// 				setReviews(response.reviews || []);
+	// 			} else {
+	// 				setReviews((prev) => [...prev, ...(response.reviews || [])]);
+	// 			}
+	// 			setTotalReviews(response.total || 0);
+	// 		} catch (error) {
+	// 			console.error('Failed to fetch reviews:', error);
+	// 		} finally {
+	// 			setReviewsLoading(false);
+	// 		}
+	// 	};
 
-		fetchReviews();
-	}, [id, reviewsPage]);
+	// 	fetchReviews();
+	// }, [id, reviewsPage]);
 
-	// Handle scroll to highlight active section
 	useEffect(() => {
 		const handleScroll = () => {
 			const scrollPosition = window.scrollY + 150;
@@ -178,7 +170,6 @@ const VenderDetail = () => {
 		return () => window.removeEventListener('scroll', handleScroll);
 	}, []);
 
-	// Smooth scroll to section on tab click
 	const scrollToSection = (id) => {
 		const el = document.getElementById(id);
 		if (el) {
@@ -189,7 +180,6 @@ const VenderDetail = () => {
 		}
 	};
 
-	// Handle message sending
 	const handleSendMessage = async () => {
 		if (!api.auth.isAuthenticated()) {
 			alert('Please login to send a message');
@@ -233,53 +223,51 @@ const VenderDetail = () => {
 		}
 	};
 
-	// Handle review submission
-	const handleWriteReview = async () => {
-		if (!api.auth.isAuthenticated()) {
-			alert('Please login to write a review');
-			navigate('/login');
-			return;
-		}
+	// const handleWriteReview = async () => {
+	// 	if (!api.auth.isAuthenticated()) {
+	// 		alert('Please login to write a review');
+	// 		navigate('/login');
+	// 		return;
+	// 	}
 
-		if (reviewData.rating === 0) {
-			alert('Please select a rating before submitting your review');
-			return;
-		}
+	// 	if (reviewData.rating === 0) {
+	// 		alert('Please select a rating before submitting your review');
+	// 		return;
+	// 	}
 
-		if (!reviewData.reviewText.trim()) {
-			alert('Please write a review before submitting');
-			return;
-		}
+	// 	if (!reviewData.reviewText.trim()) {
+	// 		alert('Please write a review before submitting');
+	// 		return;
+	// 	}
 
-		try {
-			setReviewSubmitting(true);
-			const payload = {
-				vendorId: id,
-				rating: reviewData.rating,
-				reviewText: reviewData.reviewText,
-			};
+	// 	try {
+	// 		setReviewSubmitting(true);
+	// 		const payload = {
+	// 			vendorId: id,
+	// 			rating: reviewData.rating,
+	// 			reviewText: reviewData.reviewText,
+	// 		};
 
-			await api.reviews.createReview(payload, reviewImages);
+	// 		await api.reviews.createReview(payload, reviewImages);
 
-			setReviewData({ rating: 0, reviewText: '' });
-			setReviewImages(null);
-			setReviewModal(false);
-			setReviewsPage(1);
-			alert('Review submitted successfully!');
-		} catch (error) {
-			console.error('Failed to submit review:', error);
-			alert('Failed to submit review. Please try again.');
-		} finally {
-			setReviewSubmitting(false);
-		}
-	};
+	// 		setReviewData({ rating: 0, reviewText: '' });
+	// 		setReviewImages(null);
+	// 		setReviewModal(false);
+	// 		setReviewsPage(1);
+	// 		alert('Review submitted successfully!');
+	// 	} catch (error) {
+	// 		console.error('Failed to submit review:', error);
+	// 		alert('Failed to submit review. Please try again.');
+	// 	} finally {
+	// 		setReviewSubmitting(false);
+	// 	}
+	// };
 
 	// Load more reviews
 	const loadMoreReviews = () => {
 		setReviewsPage((prev) => prev + 1);
 	};
 
-	// Helper function to render star ratings
 	const renderStars = (rating) => {
 		const stars = [];
 		const fullStars = Math.floor(rating);
@@ -309,42 +297,41 @@ const VenderDetail = () => {
 		return stars;
 	};
 
-	// Interactive star rating for reviews
-	const renderInteractiveStars = (rating, onRatingChange) => {
-		const ratings = [
-			{ value: 1, label: 'Poor', emoji: '😞' },
-			{ value: 2, label: 'Fair', emoji: '😐' },
-			{ value: 3, label: 'Good', emoji: '🙂' },
-			{ value: 4, label: 'Very Good', emoji: '😊' },
-			{ value: 5, label: 'Excellent', emoji: '🤩' },
-		];
+	// const renderInteractiveStars = (rating, onRatingChange) => {
+	// 	const ratings = [
+	// 		{ value: 1, label: 'Poor', emoji: '😞' },
+	// 		{ value: 2, label: 'Fair', emoji: '😐' },
+	// 		{ value: 3, label: 'Good', emoji: '🙂' },
+	// 		{ value: 4, label: 'Very Good', emoji: '😊' },
+	// 		{ value: 5, label: 'Excellent', emoji: '🤩' },
+	// 	];
 
-		return (
-			<div className="space-y-3">
-				<div className="flex space-x-1">
-					{[1, 2, 3, 4, 5].map((star) => (
-						<button
-							key={star}
-							type="button"
-							onClick={() => onRatingChange(star)}
-							className={`text-2xl transition-colors ${
-								star <= rating ? 'text-yellow-400' : 'text-gray-300'
-							}`}>
-							★
-						</button>
-					))}
-				</div>
-				{rating > 0 && (
-					<div className="flex items-center space-x-2 text-sm">
-						<span>{ratings[rating - 1]?.emoji}</span>
-						<span className="font-medium text-gray-700">
-							{ratings[rating - 1]?.label}
-						</span>
-					</div>
-				)}
-			</div>
-		);
-	};
+	// 	return (
+	// 		<div className="space-y-3">
+	// 			<div className="flex space-x-1">
+	// 				{[1, 2, 3, 4, 5].map((star) => (
+	// 					<button
+	// 						key={star}
+	// 						type="button"
+	// 						onClick={() => onRatingChange(star)}
+	// 						className={`text-2xl transition-colors ${
+	// 							star <= rating ? 'text-yellow-400' : 'text-gray-300'
+	// 						}`}>
+	// 						★
+	// 					</button>
+	// 				))}
+	// 			</div>
+	// 			{rating > 0 && (
+	// 				<div className="flex items-center space-x-2 text-sm">
+	// 					<span>{ratings[rating - 1]?.emoji}</span>
+	// 					<span className="font-medium text-gray-700">
+	// 						{ratings[rating - 1]?.label}
+	// 					</span>
+	// 				</div>
+	// 			)}
+	// 		</div>
+	// 	);
+	// };
 
 	// Format address helper
 	const formatAddress = (location) => {
@@ -358,7 +345,6 @@ const VenderDetail = () => {
 		return parts.length > 0 ? parts.join(', ') : 'Location not specified';
 	};
 
-	// Loading state
 	if (loading) {
 		return (
 			<div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -370,7 +356,6 @@ const VenderDetail = () => {
 		);
 	}
 
-	// Error state
 	if (error || !vendor) {
 		return (
 			<div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -395,9 +380,7 @@ const VenderDetail = () => {
 	return (
 		<div className="min-h-screen bg-gray-50">
 			<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-				{/* ✅ FIXED: Hero Section with Dynamic Cover Image */}
 				<div className="bg-white rounded-lg shadow-sm mb-6 overflow-hidden">
-					{/* ✅ FIXED: Dynamic cover image with fallback */}
 					<div className="relative h-48 bg-gray-100">
 						{vendor.images?.coverImage ? (
 							<img
@@ -405,7 +388,6 @@ const VenderDetail = () => {
 								alt={`${vendor.name} Cover`}
 								className="w-full h-full object-cover"
 								onError={(e) => {
-									// Fallback to default cover image if vendor's cover fails to load
 									e.target.src =
 										'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80';
 								}}
@@ -420,9 +402,8 @@ const VenderDetail = () => {
 						<div className="absolute inset-0 bg-black bg-opacity-20"></div>
 					</div>
 
-					<div className="relative px-6 pb-6">
+					<div className="relative px-6 pb-6 pt-8">
 						<div className="flex flex-col sm:flex-row sm:items-end sm:space-x-6">
-							{/* ✅ FIXED: Profile image with proper data structure access */}
 							<div className="relative -mt-16 mb-4 sm:mb-0 flex justify-center sm:justify-start">
 								<Avatar className="w-32 h-32 border-4 border-white shadow-lg">
 									<AvatarImage
@@ -447,26 +428,38 @@ const VenderDetail = () => {
 								</p>
 
 								<div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0">
-									<div className="flex items-center justify-center sm:justify-start">
+									{/* <div className="flex items-center justify-center sm:justify-start">
 										<div className="flex items-center space-x-1">
 											{renderStars(vendor.rating || 4.5)}
 											<span className="text-sm text-gray-600 ml-2">
 												({vendor.reviewCount || totalReviews} reviews)
 											</span>
 										</div>
-									</div>
+									</div> */}
 
 									<div className="flex space-x-3 justify-center sm:justify-start">
 										<Button
-											onClick={() => setMessageModal(true)}
+											onClick={() => {
+												const subject = encodeURIComponent(
+													`Inquiry about ${vendor.name || 'your services'}`
+												);
+												const body = encodeURIComponent(
+													`Hello ${
+														vendor.name || 'there'
+													},\n\nI am interested in your services. Please let me know your availability and rates.\n\nThank you!`
+												);
+												const gmailUrl = `https://mail.google.com/mail/?view=cm&to=${vendor.email}&subject=${subject}&body=${body}`;
+												window.open(gmailUrl, '_blank');
+											}}
 											className="bg-blue-600 hover:bg-blue-700">
-											Send Message
+											Send Message Via Email
 										</Button>
-										<Button
+
+										{/* <Button
 											onClick={() => setReviewModal(true)}
 											variant="outline">
 											Write Review
-										</Button>
+										</Button> */}
 									</div>
 								</div>
 							</div>
@@ -728,7 +721,7 @@ const VenderDetail = () => {
 					</section>
 
 					{/* Reviews Section */}
-					<section id="reviews" className="bg-white rounded-lg shadow-sm p-6">
+					{/* <section id="reviews" className="bg-white rounded-lg shadow-sm p-6">
 						<div className="flex justify-between items-center mb-6">
 							<h2 className="text-2xl font-bold text-gray-900">Reviews</h2>
 							<Button
@@ -816,7 +809,7 @@ const VenderDetail = () => {
 								</Button>
 							</div>
 						)}
-					</section>
+					</section> */}
 
 					{/* Ideabooks Section */}
 					<section id="ideabooks" className="bg-white rounded-lg shadow-sm p-6">
@@ -898,7 +891,7 @@ const VenderDetail = () => {
 				</DialogContent>
 			</Dialog>
 
-			{/* Review Modal */}
+			{/* Review Modal
 			<Dialog open={reviewModal} onOpenChange={setReviewModal}>
 				<DialogContent className="sm:max-w-md">
 					<DialogHeader>
@@ -953,7 +946,7 @@ const VenderDetail = () => {
 						</Button>
 					</DialogFooter>
 				</DialogContent>
-			</Dialog>
+			</Dialog> */}
 		</div>
 	);
 };

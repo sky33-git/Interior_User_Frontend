@@ -45,7 +45,6 @@ const FindPros = () => {
 		}
 	};
 
-	// ✅ ENHANCED: Better image error handling
 	const handleImageError = (e, categoryTitle) => {
 		console.warn(`Image failed for category: ${categoryTitle}`);
 		// Try multiple fallback approaches
@@ -64,8 +63,6 @@ const FindPros = () => {
 			e.target.src = fallbackUrls[currentIndex + 1];
 		}
 	};
-
-	// ✅ ENHANCED: Better slug generation
 	const createCategorySlug = (categoryTitle) => {
 		return categoryTitle
 			.toLowerCase()
@@ -79,11 +76,10 @@ const FindPros = () => {
 		const slug = category.slug || createCategorySlug(category.title);
 		navigate(`/design-page/${slug}`);
 	};
-
-	const filteredCategories =
-		activeTab === 'All'
-			? categories
-			: categories.filter((cat) => cat.title === activeTab);
+	//filter categories based on categoryType as "platform"
+	const filteredCategories = categories.filter(
+		(category) => category.categoryType === 'platform'
+	);
 
 	if (loading) {
 		return (
@@ -156,12 +152,15 @@ const FindPros = () => {
 							onClick={() => setActiveTab('All')}>
 							All
 						</Button>
-						{categories.map((cat) => (
+						{filteredCategories.map((cat) => (
 							<Button
 								key={cat._id}
 								variant={activeTab === cat.title ? 'default' : 'outline'}
 								className="!rounded-full"
-								onClick={() => setActiveTab(cat.title)}>
+								onClick={() => {
+									setActiveTab(cat.title);
+									handleCategoryClick(cat);
+								}}>
 								{cat.title}
 							</Button>
 						))}
