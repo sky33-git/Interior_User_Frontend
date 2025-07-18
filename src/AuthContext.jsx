@@ -330,7 +330,7 @@ export const AuthProvider = ({ children }) => {
 		refreshSession,
 
 		// Auth utilities
-		isAuthenticated,
+		isAuthenticated: isAuthenticated(),
 		getUserRole,
 		hasRole,
 
