@@ -1,10 +1,12 @@
 import {
 	BookOpen,
+	Briefcase,
 	Heart,
 	Home,
 	Image,
 	Layers,
 	LogOut,
+	MapPin,
 	MessageSquare,
 	PlusCircle,
 	Search,
@@ -14,10 +16,11 @@ import {
 	User,
 	UserPlus,
 } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { categoryAPI } from './api';
+import api, { categoryAPI } from './api'; // ✅ ADD: Import main api for vendor search
 import { useAuth } from './AuthContext';
+
 function Navbar() {
 	const location = useLocation();
 	const { user, logout, isAuthenticated } = useAuth();
@@ -27,6 +30,16 @@ function Navbar() {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
 	const [categories, setCategories] = useState([]);
+
+	// ✅ NEW: Search results states
+	const [searchResults, setSearchResults] = useState({
+		categories: [],
+		vendors: [],
+		cities: [],
+		professions: [],
+	});
+	const [searchLoading, setSearchLoading] = useState(false);
+
 	const navigate = useNavigate();
 
 	const fetchCategories = async () => {
@@ -50,12 +63,109 @@ function Navbar() {
 			setLoading(false);
 		}
 	};
+
+	// ✅ NEW: Enhanced search function
+	const performSearch = useCallback(
+		async (query) => {
+			if (!query || query.length < 2) {
+				setSearchResults({
+					categories: [],
+					vendors: [],
+					cities: [],
+					professions: [],
+				});
+				return;
+			}
+
+			try {
+				setSearchLoading(true);
+
+				// Search categories
+				const matchingCategories = categories.filter((category) =>
+					category.title.toLowerCase().includes(query.toLowerCase())
+				);
+
+				// Search vendors
+				const vendorResponse = await api.vendors.getAllVendors({
+					search: query,
+					limit: 8, // Limit results for dropdown
+				});
+
+				const vendors = vendorResponse.success
+					? vendorResponse.data.vendors || []
+					: [];
+
+				// Extract unique cities from vendors
+				const allCities = vendors
+					.map((vendor) => vendor.location?.city)
+					.filter(Boolean)
+					.filter(
+						(city, index, self) =>
+							city.toLowerCase().includes(query.toLowerCase()) &&
+							self.indexOf(city) === index
+					)
+					.slice(0, 5); // Limit cities
+
+				// Filter professions
+				const vendorProfessionTypes = [
+					'Interior Designer',
+					'Architect',
+					'Contractor',
+					'Furniture Dealer',
+					'Decorator',
+					'Home Stylist',
+					'Space Planner',
+				];
+
+				const matchingProfessions = vendorProfessionTypes.filter((profession) =>
+					profession.toLowerCase().includes(query.toLowerCase())
+				);
+
+				setSearchResults({
+					categories: matchingCategories.slice(0, 3),
+					vendors: vendors.slice(0, 8),
+					cities: allCities,
+					professions: matchingProfessions,
+				});
+				console.log('Vendors here ', vendors);
+			} catch (error) {
+				console.error('Search failed:', error);
+				setSearchResults({
+					categories: [],
+					vendors: [],
+					cities: [],
+					professions: [],
+				});
+			} finally {
+				setSearchLoading(false);
+			}
+		},
+		[categories]
+	);
+
+	// ✅ NEW: Debounced search
+	useEffect(() => {
+		const debounceTimer = setTimeout(() => {
+			performSearch(searchQuery);
+		}, 300);
+
+		return () => clearTimeout(debounceTimer);
+	}, [searchQuery, performSearch]);
+
 	useEffect(() => {
 		fetchCategories();
 	}, []);
+
 	useEffect(() => {
 		console.log('Categories updated:', categories);
 	}, [categories]);
+
+	// ✅ NEW: Image processing function for vendor photos
+	const processImageUrl = (imageUrl) => {
+		if (!imageUrl) return null;
+		if (imageUrl.startsWith('http')) return imageUrl;
+		return `https://res.cloudinary.com/dbpjwgvst/image/upload/c_fill,f_auto,h_40,q_auto,w_40/v1/${imageUrl}`;
+	};
 
 	const createCategorySlug = (categoryTitle) => {
 		return categoryTitle
@@ -64,20 +174,39 @@ function Navbar() {
 			.replace(/\s+/g, '-')
 			.trim();
 	};
-	const vendorProfessionTypes = [
-		'Interior Designer',
-		'Architect',
-		'Contractor',
-		'Furniture Dealer',
-		'Decorator',
-		'Home Stylist',
-		'Space Planner',
-	];
+
 	const handleCategoryClick = (category) => {
 		const slug = category.slug || createCategorySlug(category.title);
 		navigate(`/design-page/${slug}`);
+		setSearchQuery('');
 	};
-	const filteredSuggestions = categories;
+
+	// ✅ NEW: Handle vendor click
+	const handleVendorClick = (vendor) => {
+		navigate(`/design-vendor/${vendor._id}`);
+		setSearchQuery('');
+	};
+
+	// ✅ NEW: Handle city click
+	const handleCityClick = (city) => {
+		navigate(`/design-ideas?city=${encodeURIComponent(city)}`);
+		setSearchQuery('');
+	};
+
+	// ✅ NEW: Handle profession click
+	const handleProfessionClick = (profession) => {
+		navigate(`/design-ideas?profession=${encodeURIComponent(profession)}`);
+		setSearchQuery('');
+	};
+
+	const hasSearchResults = () => {
+		return (
+			searchResults.categories.length > 0 ||
+			searchResults.vendors.length > 0 ||
+			searchResults.cities.length > 0 ||
+			searchResults.professions.length > 0
+		);
+	};
 
 	const navLinks = [
 		{ name: 'Home', to: '/', icon: <Home size={20} /> },
@@ -100,11 +229,17 @@ function Navbar() {
 			icon: <Image size={20} />,
 			dropdown: true,
 			children: [
-				...vendorProfessionTypes.map((type) => ({
-					name: type,
-					to: `/design-ideas?profession=${encodeURIComponent(type)}`,
-				})),
-			],
+				'Interior Designer',
+				'Architect',
+				'Contractor',
+				'Furniture Dealer',
+				'Decorator',
+				'Home Stylist',
+				'Space Planner',
+			].map((type) => ({
+				name: type,
+				to: `/design-ideas?profession=${encodeURIComponent(type)}`,
+			})),
 		},
 	];
 
@@ -115,6 +250,123 @@ function Navbar() {
 	const handleLogout = async () => {
 		await logout();
 		setUserDropdown(false);
+	};
+
+	// ✅ NEW: Enhanced Search Results Component
+	const SearchResults = () => {
+		if (searchQuery.length < 2) return null;
+
+		return (
+			<div className="absolute z-50 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-96 overflow-y-auto">
+				{searchLoading ? (
+					<div className="px-4 py-3 text-sm text-gray-500 flex items-center">
+						<div className="animate-spin rounded-full h-4 w-4 border-b-2 border-indigo-500 mr-2"></div>
+						Searching...
+					</div>
+				) : hasSearchResults() ? (
+					<div className="py-2">
+						{searchResults.categories.length > 0 && (
+							<div className="mb-2">
+								<div className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase bg-gray-50">
+									Categories
+								</div>
+								{searchResults.categories.map((category, index) => (
+									<div
+										key={`category-${index}`}
+										className="px-4 py-2 hover:bg-indigo-50 cursor-pointer flex items-center"
+										onClick={() => handleCategoryClick(category)}>
+										<Layers className="w-4 h-4 text-indigo-500 mr-3" />
+										<span className="text-sm">{category.title}</span>
+									</div>
+								))}
+							</div>
+						)}
+
+						{searchResults.vendors.length > 0 && (
+							<div className="mb-2">
+								<div className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase bg-gray-50">
+									Vendors
+								</div>
+								{searchResults.vendors.map((vendor, index) => (
+									<div
+										key={`vendor-${index}`}
+										className="px-4 py-2 hover:bg-indigo-50 cursor-pointer flex items-center"
+										onClick={() => handleVendorClick(vendor)}>
+										<div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 mr-3 flex-shrink-0">
+											{vendor.images.profileImage ? (
+												<img
+													src={processImageUrl(vendor.images.profileImage)}
+													alt={vendor.name}
+													className="w-full h-full object-cover"
+													onError={(e) => {
+														e.target.style.display = 'none';
+													}}
+												/>
+											) : (
+												<div className="w-full h-full flex items-center justify-center text-xs font-semibold text-gray-500">
+													{vendor.name?.charAt(0)?.toUpperCase() || 'V'}
+												</div>
+											)}
+										</div>
+										<div className="flex-1 min-w-0">
+											<div className="text-sm font-medium text-gray-900 truncate">
+												{vendor.name}
+											</div>
+											<div className="text-xs text-gray-500 truncate">
+												{vendor.professionType} •{' '}
+												{vendor.location?.city || 'Location not specified'}
+											</div>
+										</div>
+									</div>
+								))}
+							</div>
+						)}
+
+						{searchResults.cities.length > 0 && (
+							<div className="mb-2">
+								<div className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase bg-gray-50">
+									Cities
+								</div>
+								{searchResults.cities.map((city, index) => (
+									<div
+										key={`city-${index}`}
+										className="px-4 py-2 hover:bg-indigo-50 cursor-pointer flex items-center"
+										onClick={() => handleCityClick(city)}>
+										<MapPin className="w-4 h-4 text-green-500 mr-3" />
+										<span className="text-sm">{city}</span>
+										<span className="text-xs text-gray-400 ml-auto">
+											Find pros in {city}
+										</span>
+									</div>
+								))}
+							</div>
+						)}
+
+						{/* Professions Section */}
+						{searchResults.professions.length > 0 && (
+							<div>
+								<div className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase bg-gray-50">
+									Professions
+								</div>
+								{searchResults.professions.map((profession, index) => (
+									<div
+										key={`profession-${index}`}
+										className="px-4 py-2 hover:bg-indigo-50 cursor-pointer flex items-center"
+										onClick={() => handleProfessionClick(profession)}>
+										<Briefcase className="w-4 h-4 text-blue-500 mr-3" />
+										<span className="text-sm">{profession}</span>
+									</div>
+								))}
+							</div>
+						)}
+					</div>
+				) : (
+					<div className="px-4 py-3 text-sm text-gray-500">
+						No results found for "{searchQuery}"
+					</div>
+				)}
+			</div>
+		);
 	};
 
 	return (
@@ -129,44 +381,20 @@ function Navbar() {
 							</div>
 						</Link>
 
-						{/* Search Input (Desktop) */}
-						{/*/I want this search bar, to show the categories, as soon as user type a character, it will show the related category, and route it to that category page if clicked */}
-						{/* Search Input (Desktop) */}
+						{/* ✅ Enhanced Search Input (Desktop) */}
 						<div className="hidden md:block relative w-1/3">
 							<input
 								type="text"
 								value={searchQuery}
 								onChange={(e) => setSearchQuery(e.target.value)}
-								placeholder="Search..."
+								placeholder="Search categories, vendors, cities, professions..."
 								className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
 							/>
 							<Search
 								className="absolute left-3 top-2.5 text-gray-500"
 								size={16}
 							/>
-							{/* ✅ Only show when user types at least 2 characters */}
-							{searchQuery.length >= 2 && filteredSuggestions.length > 0 && (
-								<ul className="absolute z-50 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg text-sm max-h-60 overflow-y-auto">
-									{filteredSuggestions
-										.filter(
-											(suggestion) =>
-												suggestion.title
-													.toLowerCase()
-													.startsWith(searchQuery.toLowerCase()) // ✅ Only match from beginning
-										)
-										.map((suggestion, index) => (
-											<li
-												key={index}
-												className="px-4 py-2 hover:bg-indigo-100 cursor-pointer"
-												onClick={() => {
-													setSearchQuery(suggestion.title);
-													handleCategoryClick(suggestion);
-												}}>
-												{suggestion.title}
-											</li>
-										))}
-								</ul>
-							)}
+							<SearchResults />
 						</div>
 
 						<nav className="ml-10 flex items-center space-x-5">
@@ -262,7 +490,6 @@ function Navbar() {
 										<span>Hi, {getFirstName(user.name)}</span>
 									</button>
 
-									{/* ✅ UPDATED: Simplified Dropdown with only 3 options */}
 									{userDropdown && (
 										<div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-50">
 											<Link
@@ -272,13 +499,6 @@ function Navbar() {
 												<User size={16} className="mr-2" />
 												Profile
 											</Link>
-											{/* <Link
-												to="/messages"
-												className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-												onClick={() => setUserDropdown(false)}>
-												<MessageSquare size={16} className="mr-2" />
-												Messages
-											</Link> */}
 											<hr className="my-1" />
 											<button
 												onClick={handleLogout}
@@ -313,39 +533,18 @@ function Navbar() {
 				Interior 5D
 			</div>
 
-			{/* Search Input (Mobile) */}
+			{/* ✅ Enhanced Search Input (Mobile) */}
 			<div className="md:hidden bg-white px-4 py-2">
 				<div className="relative">
 					<input
 						type="text"
 						value={searchQuery}
 						onChange={(e) => setSearchQuery(e.target.value)}
-						placeholder="Search..."
+						placeholder="Search categories, vendors, cities..."
 						className="w-full pl-10 pr-4 py-1.5 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
 					/>
 					<Search className="absolute left-3 top-2.5 text-gray-500" size={16} />
-
-					{searchQuery.length >= 2 && filteredSuggestions.length > 0 && (
-						<ul className="absolute z-50 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg text-sm max-h-60 overflow-y-auto">
-							{filteredSuggestions
-								.filter((suggestion) =>
-									suggestion.title
-										.toLowerCase()
-										.startsWith(searchQuery.toLowerCase())
-								)
-								.map((suggestion, index) => (
-									<li
-										key={index}
-										className="px-4 py-2 hover:bg-indigo-100 cursor-pointer"
-										onClick={() => {
-											setSearchQuery(suggestion.title);
-											handleCategoryClick(suggestion);
-										}}>
-										{suggestion.title}
-									</li>
-								))}
-						</ul>
-					)}
+					<SearchResults />
 				</div>
 			</div>
 
@@ -354,15 +553,12 @@ function Navbar() {
 				<div className="flex justify-around items-center h-14">
 					{navLinks
 						.filter((link) => {
-							// ✅ Show Features and Resources to everyone
 							if (link.name === 'Features' || link.name === 'Resources') {
 								return true;
 							}
-							// ✅ Show Home to everyone
 							if (link.name === 'Home') {
 								return true;
 							}
-							// ✅ Show protected routes only if authenticated
 							return isAuthenticated;
 						})
 						.map((link) => (
@@ -374,24 +570,18 @@ function Navbar() {
 										? 'text-indigo-600'
 										: 'text-gray-500 hover:text-indigo-600'
 								}`}>
-								{React.cloneElement(link.icon, { size: 16 })}{' '}
-								{/* ✅ Smaller icons */}
-								<span className="text-xs mt-1">{link.name}</span>{' '}
-								{/* ✅ Smaller text with margin */}
+								{React.cloneElement(link.icon, { size: 16 })}
+								<span className="text-xs mt-1">{link.name}</span>
 							</Link>
 						))}
 
-					{/* Mobile User Authentication */}
 					{isAuthenticated && user ? (
 						<div className="flex flex-col items-center text-xs">
 							<button
 								onClick={() => setUserDropdown(!userDropdown)}
 								className="flex flex-col items-center text-xs text-gray-500 hover:text-indigo-600">
-								<User size={16} /> {/* ✅ Smaller icon */}
-								<span className="text-xs mt-1">
-									{getFirstName(user.name)}
-								</span>{' '}
-								{/* ✅ Smaller text */}
+								<User size={16} />
+								<span className="text-xs mt-1">{getFirstName(user.name)}</span>
 							</button>
 						</div>
 					) : (
@@ -399,22 +589,19 @@ function Navbar() {
 							<Link
 								to="/login"
 								className="flex flex-col items-center text-xs text-gray-500 hover:text-indigo-600">
-								<User size={16} /> {/* ✅ Smaller icon */}
-								<span className="text-xs mt-1">Sign In</span>{' '}
-								{/* ✅ Smaller text */}
+								<User size={16} />
+								<span className="text-xs mt-1">Sign In</span>
 							</Link>
 							<Link
 								to="/signup"
 								className="flex flex-col items-center text-xs text-gray-500 hover:text-indigo-600">
-								<UserPlus size={16} /> {/* ✅ Smaller icon */}
-								<span className="text-xs mt-1">Sign Up</span>{' '}
-								{/* ✅ Smaller text */}
+								<UserPlus size={16} />
+								<span className="text-xs mt-1">Sign Up</span>
 							</Link>
 						</>
 					)}
 				</div>
 
-				{/* ✅ UPDATED: Mobile User Dropdown with only 3 options */}
 				{userDropdown && isAuthenticated && user && (
 					<div className="absolute bottom-14 right-4 w-48 bg-white rounded-md shadow-lg py-2 z-50">
 						<Link
@@ -424,13 +611,6 @@ function Navbar() {
 							<User size={16} className="mr-2" />
 							Profile
 						</Link>
-						{/* <Link
-							to="/messages"
-							className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-							onClick={() => setUserDropdown(false)}>
-							<MessageSquare size={16} className="mr-2" />
-							Messages
-						</Link> */}
 						<hr className="my-1" />
 						<button
 							onClick={handleLogout}

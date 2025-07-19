@@ -23,7 +23,7 @@ const DesignIdeas = () => {
 	// Filter state
 	const [filters, setFilters] = useState({
 		category: '',
-		city: '',
+		city: searchParams.get('city') || '',
 		state: '',
 		professionType: searchParams.get('profession') || '',
 		budgetLevel: '',
@@ -104,7 +104,7 @@ const DesignIdeas = () => {
 			category: '',
 			city: '',
 			state: '',
-			professionType: searchParams.get('profession') || '',
+			professionType: '',
 			budgetLevel: '',
 			rating: '',
 			search: '',
@@ -158,7 +158,16 @@ const DesignIdeas = () => {
 			(value) => value !== '' && value !== 1 && value !== 12
 		).length;
 	};
+	useEffect(() => {
+		const professionFromUrl = searchParams.get('profession');
+		const cityFromUrl = searchParams.get('city');
 
+		setFilters((prev) => ({
+			...prev,
+			professionType: professionFromUrl || '',
+			city: cityFromUrl || '',
+		}));
+	}, [searchParams]);
 	return (
 		<div className="min-h-screen bg-gray-50">
 			<div className="max-w-7xl mx-auto px-4 py-8">
