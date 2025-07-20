@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import api, { categoryAPI } from './api'; // ✅ ADD: Import main api for vendor search
+import api, { categoryAPI } from './api';
 import { useAuth } from './AuthContext';
 
 function Navbar() {
@@ -252,7 +252,6 @@ function Navbar() {
 		setUserDropdown(false);
 	};
 
-	// ✅ NEW: Enhanced Search Results Component
 	const SearchResults = () => {
 		if (searchQuery.length < 2) return null;
 
@@ -380,8 +379,6 @@ function Navbar() {
 								Interior 5D
 							</div>
 						</Link>
-
-						{/* ✅ Enhanced Search Input (Desktop) */}
 						<div className="hidden md:block relative w-1/3">
 							<input
 								type="text"

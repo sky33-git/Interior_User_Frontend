@@ -34,7 +34,8 @@ googleProvider.setCustomParameters({
 
 // Backend API base URL
 const API_BASE_URL =
-	import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api';
+	import.meta.env.VITE_API_BASE_URL ||
+	'https://interiorbackend-1c31.onrender.com/api';
 
 // Cloudinary Configuration
 const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
