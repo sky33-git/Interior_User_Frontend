@@ -1,28 +1,34 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { AuthProvider, useAuth } from './AuthContext';
-import DesignDetailPage from './DesignDetailPage';
-import DesignIdeas from './DesignIdeasPage';
-import DesignPage from './DesignPage';
-import Feature from './Feature';
-import FindPros from './FindPros';
-import Footer from './Footer';
-import { default as Gallery, default as Ideas } from './Ideas';
+import DesignDetailPage from './pages/DesignDetailPage';
+import DesignIdeas from './pages/DesignIdeasPage';
+import DesignPage from './pages/DesignPage';
+import Feature from './components/components/Feature';
+import FindPros from './pages/FindPros';
+import Footer from './components/components/Footer';
+import { default as Gallery, default as Ideas } from './pages/Ideas';
 import './index.css';
-import Login from './Login';
+import Login from './pages/Login';
 import Messages from './Messages';
-import Navbar from './Navbar';
+import Navbar from './components/components/Navbar';
 import Home from './pages/Home';
-import Profile from './Profile';
+import Profile from './pages/Profile';
 import ProtectedRoute from './ProtectedRoute';
-import Resources from './Resources';
-import Search from './SearchAi';
-import SignUp from './SignUp';
+import Resources from './pages/Resources';
+import Search from './pages/SearchAi';
+import SignUp from './pages/SignUp';
 import Test from './Test';
 import Toast from './Toast';
-import VenderDetail from './VenderDetail';
+import VenderDetail from './pages/VenderDetail';
+import { useLocation } from 'react-router-dom';
+
 
 function AppContent() {
 	const { toast, hideToast } = useAuth();
+		const location = useLocation();
+
+		const isHomePage = location.pathname === '/';
+
 
 	return (
 		<div className="relative">
@@ -35,6 +41,12 @@ function AppContent() {
 			<div className="fixed top-0 left-0 right-0 z-50">
 				<Navbar />
 			</div>
+			{/* Navbar - hide on home page */}
+			{/* {!isHomePage && (
+				<div className="fixed top-0 left-0 right-0 z-50">
+					<Navbar />
+				</div>
+			)} */}
 			<div className="pt-16">
 				<Routes>
 					<Route path="/" element={<Home />} />
@@ -100,8 +112,8 @@ function AppContent() {
 					/> */}
 				</Routes>
 			</div>
-			<Footer />
-		</div>
+{/* Footer - hide on home page */}
+			{!isHomePage && <Footer />}		</div>
 	);
 }
 
