@@ -11,13 +11,14 @@ import {
 } from 'firebase/auth';
 
 const firebaseConfig = {
-	apiKey: 'AIzaSyCwtyXKdHiKUqx8MWQkTsO4Y3pDIRQyWco',
-	authDomain: 'interiordesign-ee9cf.firebaseapp.com',
-	projectId: 'interiordesign-ee9cf',
-	storageBucket: 'interiordesign-ee9cf.firebasestorage.app',
-	messagingSenderId: '177990601301',
-	appId: '1:177990601301:web:ecbe459a5031449eb8e2dc',
-	measurementId: 'G-J4M8SENQHL',
+  apiKey: "AIzaSyBszSZPPLrdRqWR9K8JJoZt3VAcd5Kg4fo",
+  authDomain: "interior-design-aa76a.firebaseapp.com",
+  databaseURL: "https://interior-design-aa76a-default-rtdb.firebaseio.com",
+  projectId: "interior-design-aa76a",
+  storageBucket: "interior-design-aa76a.firebasestorage.app",
+  messagingSenderId: "749858805005",
+  appId: "1:749858805005:web:2a57200a138e26979ecc44",
+  measurementId: "G-157KHMWN7K"
 };
 
 // Initialize Firebase
