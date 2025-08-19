@@ -269,7 +269,7 @@ function Navbar() {
 								<div className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase bg-gray-50">
 									Categories
 								</div>
-								{searchResults.categories.map((category, index) => (
+								{searchResults?.categories?.map((category, index) => (
 									<div
 										key={`category-${index}`}
 										className="px-4 py-2 hover:bg-indigo-50 cursor-pointer flex items-center"
@@ -321,7 +321,7 @@ function Navbar() {
 							</div>
 						)}
 
-						{searchResults.cities.length > 0 && (
+						{searchResults?.cities?.length > 0 && (
 							<div className="mb-2">
 								<div className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase bg-gray-50">
 									Cities
@@ -379,7 +379,7 @@ function Navbar() {
 								Interior 5D
 							</div>
 						</Link>
-						<div className="hidden md:block relative w-1/3">
+					{isAuthenticated && 	<div className="hidden md:block relative w-1/3">
 							<input
 								type="text"
 								value={searchQuery}
@@ -392,7 +392,7 @@ function Navbar() {
 								size={16}
 							/>
 							<SearchResults />
-						</div>
+						</div>}
 
 						<nav className="ml-10 flex items-center space-x-5">
 							{navLinks
@@ -531,7 +531,8 @@ function Navbar() {
 			</div>
 
 			{/* ✅ Enhanced Search Input (Mobile) */}
-			<div className="md:hidden bg-white px-4 py-2">
+
+			{isAuthenticated && <div className="md:hidden bg-white px-4 py-2">
 				<div className="relative">
 					<input
 						type="text"
@@ -543,7 +544,8 @@ function Navbar() {
 					<Search className="absolute left-3 top-2.5 text-gray-500" size={16} />
 					<SearchResults />
 				</div>
-			</div>
+			</div>}
+			
 
 			{/* Mobile Bottom Navbar */}
 			<nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t md:hidden">
