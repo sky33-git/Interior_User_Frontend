@@ -1,5 +1,9 @@
 import { useState, useRef } from "react";
 import axios from "axios";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+
 
 const Search = () => {
   const [selectedFileType, setSelectedFileType] = useState("text");
@@ -13,7 +17,7 @@ const Search = () => {
   const handleFileUpload = (event) => {
     const file = event.target.files?.[0];
     if (file) {
-      setUploadedFile(file);
+      handleFileSelect(file);
     }
   };
 
@@ -36,13 +40,29 @@ const Search = () => {
   };
 
   const handleFileSelect = (file) => {
-    const validTypes = ["image/jpeg", "image/png", "application/pdf"];
+    const validTypes = [
+      "image/jpeg",
+      "image/png",
+      "application/pdf",
+      "image/svg+xml",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+
     if (validTypes.includes(file.type)) {
       setUploadedFile(file);
     } else {
-      alert("Please upload a valid file (PNG, JPG, or PDF)");
+      alert("Please upload a valid file (PNG, JPG, PDF, DOCX, or SVG)");
     }
   };
+
+  // Convert uploaded file to Base64 (for Gemini image input)
+  const fileToBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
 
   const handleGenerate = async () => {
     if (!prompt && !uploadedFile) {
@@ -50,24 +70,90 @@ const Search = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("prompt", prompt);
-    formData.append("image", uploadedFile);
-
     setIsGenerating(true);
+    setGeneratedContent(null);
 
     try {
-      const response = await axios.post("http://localhost:8000/", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      // HuggingFace Text (GPT-2)
+      if (selectedFileType === "text") {
+        const response = await axios.post(
+          "https://api-inference.huggingface.co/models/gpt2",
+          { inputs: prompt },
+          {
+            headers: {
+              Authorization: "Bearer YOUR_HUGGING_FACE_API_KEY",
+            },
+          }
+        );
+        setGeneratedContent(response.data[0].generated_text);
+      }
 
-      const imageUrl = response.data.download_url;
-      setGeneratedContent(`Generated Image: ${imageUrl}`);
+      // HuggingFace Image (Stable Diffusion)
+      else if (selectedFileType === "image") {
+        if (uploadedFile && prompt) {
+          alert(
+            "Image transformation requires a premium API. Using text-to-image instead."
+          );
+        }
+
+        const response = await axios.post(
+          "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5",
+          { inputs: prompt },
+          {
+            headers: {
+              Authorization: "Bearer YOUR_HUGGING_FACE_API_KEY",
+            },
+            responseType: "blob",
+          }
+        );
+
+        const imageUrl = URL.createObjectURL(response.data);
+        setGeneratedContent(imageUrl);
+      }
+
+      // HuggingFace PDF / DOCX Analysis
+      else if (selectedFileType === "pdf" && uploadedFile) {
+        const formData = new FormData();
+        formData.append("file", uploadedFile);
+        formData.append("question", prompt || "What is this document about?");
+
+        const response = await axios.post(
+          "https://api-inference.huggingface.co/models/impira/layoutlm-document-qa",
+          formData,
+          {
+            headers: {
+              Authorization: "Bearer YOUR_HUGGING_FACE_API_KEY",
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        setGeneratedContent(response.data.answer);
+      }
+
+      // Gemini (Text or Image + Text Analysis)
+      else if (selectedFileType === "gemini") {
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+
+        if (uploadedFile) {
+          const imageBase64 = await fileToBase64(uploadedFile);
+          const imagePart = {
+            inlineData: {
+              data: imageBase64.split(",")[1],
+              mimeType: uploadedFile.type,
+            },
+          };
+
+          const result = await model.generateContent([prompt, imagePart]);
+          setGeneratedContent(result.response.text());
+        } else {
+          const result = await model.generateContent(prompt);
+          setGeneratedContent(result.response.text());
+        }
+      }
     } catch (error) {
       console.error("Error generating content:", error);
-      alert("Failed to generate content. Check console or backend.");
+      alert("Failed to generate content. Check console for details.");
     }
 
     setIsGenerating(false);
@@ -81,11 +167,11 @@ const Search = () => {
             <div className="bg-white rounded-xl shadow-lg p-6">
               <div className="mb-6">
                 <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 text-center md:text-left">
-                  CreativeAI Studio
+                  Interior AI Studio
                 </h2>
                 <p className="text-gray-600 text-sm md:text-base text-center md:text-left">
-                  Your all-in-one AI assistant for generating text, images, and
-                  document analysis
+                  Your all-in-one AI assistant for generating text, images,
+                  document analysis and multimodal with Gemini
                 </p>
               </div>
               <div className="relative mb-4">
@@ -101,7 +187,8 @@ const Search = () => {
                       {[
                         { type: "text", icon: "fa-font", label: "Text" },
                         { type: "image", icon: "fa-image", label: "Image" },
-                        { type: "pdf", icon: "fa-file-pdf", label: "PDF" },
+                        { type: "pdf", icon: "fa-file-pdf", label: "PDF/DOCS" },
+                        { type: "gemini", icon: "fa-robot", label: "Gemini" },
                       ].map(({ type, icon, label }) => (
                         <button
                           key={type}
@@ -138,24 +225,40 @@ const Search = () => {
                 </div>
                 {selectedFileType !== "text" && (
                   <div className="mt-3 flex flex-col sm:flex-row items-center sm:items-start sm:space-x-4 space-y-2 sm:space-y-0">
-                    <label className="flex items-center space-x-2 px-4 py-2 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer hover:bg-gray-100">
-                      <i className="fas fa-upload"></i>
-                      <span>Upload {selectedFileType}</span>
+                    <div
+                      className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer ${
+                        isDragging
+                          ? "border-indigo-500 bg-indigo-50"
+                          : "border-gray-300"
+                      }`}
+                      onDrop={handleDrop}
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      <i className="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                      <p className="text-sm text-gray-600">
+                        Drag and drop your {selectedFileType} file here, or
+                        click to browse
+                      </p>
                       <input
+                        ref={fileInputRef}
                         type="file"
                         className="hidden"
                         onChange={handleFileUpload}
                         accept={
-                          selectedFileType === "image"
+                          selectedFileType === "image" ||
+                          selectedFileType === "gemini"
                             ? "image/*"
                             : selectedFileType === "pdf"
-                            ? ".pdf"
+                            ? ".pdf,.doc,.docx,image/svg+xml"
                             : "*"
                         }
                       />
-                    </label>
+                    </div>
                     {uploadedFile && (
-                      <div className="flex items-center space-x-2 text-sm">
+                      <div className="flex items-center space-x-2 text-sm bg-gray-50 p-3 rounded-lg">
+                        <i className="fas fa-file text-indigo-600"></i>
                         <span className="text-gray-600 truncate max-w-xs">
                           {uploadedFile.name}
                         </span>
@@ -163,7 +266,7 @@ const Search = () => {
                           className="text-red-500 hover:text-red-700"
                           onClick={() => setUploadedFile(null)}
                         >
-                          <i className="fas fa-times-circle"></i>
+                          <i className="fas fa-times"></i>
                         </button>
                       </div>
                     )}
@@ -171,35 +274,29 @@ const Search = () => {
                 )}
               </div>
               {generatedContent && (
-                <div className="mt-4">
-                  <p className="text-green-700 text-sm md:text-base">
-                    {generatedContent}
-                  </p>
-                  <img
-                    src={generatedContent.replace("Generated Image: ", "")}
-                    alt="Generated Output"
-                    className="mt-2 w-full sm:w-1/2 rounded-lg"
-                  />
+                <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                  <h3 className="font-medium text-gray-900 mb-2">
+                    Generated Output:
+                  </h3>
+                  {selectedFileType === "image" ? (
+                    <img
+                      src={generatedContent}
+                      alt="Generated Output"
+                      className="mt-2 max-w-full rounded-lg"
+                    />
+                  ) : (
+                    <p className="text-gray-700 whitespace-pre-wrap">
+                      {generatedContent}
+                    </p>
+                  )}
                 </div>
               )}
-              {/* <div className="mt-6 flex flex-wrap gap-2 justify-center md:justify-start">
-                <div className="text-sm text-gray-500">Try:</div>
-                {[
-                  "Write a blog post about the future of AI in healthcare",
-                  "Generate an image of a futuristic smart home",
-                  "Create a React component for a user profile card",
-                ].map((example, index) => (
-                  <button
-                    key={index}
-                    className="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full cursor-pointer"
-                    onClick={() => setPrompt(example)}
-                  >
-                    {example.length > 40
-                      ? `${example.slice(0, 37)}...`
-                      : example}
-                  </button>
-                ))}
-              </div> */}
+              <div className="mt-6 text-xs text-gray-500 text-center">
+                <p>
+                  Powered by Hugging Face and Gemini AI models. Free tiers have
+                  rate limits.
+                </p>
+              </div>
             </div>
           </div>
         </div>

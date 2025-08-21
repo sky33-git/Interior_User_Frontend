@@ -21,6 +21,7 @@ import Test from './Test';
 import Toast from './Toast';
 import VenderDetail from './pages/VenderDetail';
 import { useLocation } from 'react-router-dom';
+import AIChatGenerator from './pages/AIChatGenerator';
 
 
 function AppContent() {
@@ -82,6 +83,14 @@ function AppContent() {
 						element={
 							<ProtectedRoute>
 								<Search />
+							</ProtectedRoute>
+						}
+					/>
+					<Route
+						path="/ai-chat"
+						element={
+							<ProtectedRoute>
+							<AIChatGenerator/>
 							</ProtectedRoute>
 						}
 					/>
