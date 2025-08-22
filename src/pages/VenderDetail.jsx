@@ -54,7 +54,7 @@ const VenderDetail = () => {
 		{ id: 'about', label: 'About Us' },
 		{ id: 'projects', label: 'Projects' },
 		{ id: 'business', label: 'Business' },
-		{ id: 'credentials', label: 'Credentials' },
+		// { id: 'credentials', label: 'Credentials' },
 		// { id: 'reviews', label: 'Reviews' },
 		{ id: 'ideabooks', label: 'Ideabooks' },
 	];
@@ -379,9 +379,9 @@ const VenderDetail = () => {
 
 	return (
 		<div className="min-h-screen bg-gray-50">
-			<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="bg-white rounded-lg shadow-sm mb-6 overflow-hidden">
-					<div className="relative h-48 bg-gray-100">
+					<div className="relative h-72 bg-gray-100">
 						{vendor.images?.coverImage ? (
 							<img
 								src={getCoverImageUrl(vendor.images.coverImage)}
@@ -405,7 +405,7 @@ const VenderDetail = () => {
 					<div className="relative px-6 pb-6 pt-8">
 						<div className="flex flex-col sm:flex-row sm:items-end sm:space-x-6">
 							<div className="relative -mt-16 mb-4 sm:mb-0 flex justify-center sm:justify-start">
-								<Avatar className="w-32 h-32 border-4 border-white shadow-lg">
+								<Avatar className="w-64 h-64 border-4 border-white shadow-lg">
 									<AvatarImage
 										src={getProfileImageUrl(vendor.images?.profileImage)}
 										alt={vendor.name}
@@ -663,7 +663,7 @@ const VenderDetail = () => {
 					</section>
 
 					{/* Credentials Section */}
-					<section
+					{/* <section
 						id="credentials"
 						className="bg-white rounded-lg shadow-sm p-6">
 						<h2 className="text-2xl font-bold text-gray-900 mb-4">
@@ -718,7 +718,7 @@ const VenderDetail = () => {
 									</div>
 								)}
 						</div>
-					</section>
+					</section> */}
 
 					{/* Reviews Section */}
 					{/* <section id="reviews" className="bg-white rounded-lg shadow-sm p-6">

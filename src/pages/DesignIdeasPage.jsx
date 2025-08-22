@@ -168,18 +168,36 @@ const DesignIdeas = () => {
 			city: cityFromUrl || '',
 		}));
 	}, [searchParams]);
+
+
+
+	console.log(vendors , "data")
 	return (
-		<div className="min-h-screen bg-gray-50">
+		<div className="min-h-screen bg-gray-50  ">
 			<div className="max-w-7xl mx-auto px-4 py-8">
 				{/* Header */}
-				<div className="mb-8">
-					<h1 className="text-3xl font-bold text-gray-900 mb-2">
-						Find Professional Vendors
-					</h1>
-					<p className="text-gray-600">
-						Discover and connect with verified interior design professionals
-					</p>
-				</div>
+				    <section className="relative h-[60vh] mb-5 flex items-center">
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <img
+          src="https://images.pexels.com/photos/1090638/pexels-photo-1090638.jpeg" // replace with your vendor-related hero image
+          alt="Professional Interior Vendors"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/50" /> {/* Dark overlay */}
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 max-w-4xl mx-auto px-6 text-center text-white">
+        <h1 className="text-5xl md:text-6xl font-extrabold mb-6">
+          Find Professional Vendors
+        </h1>
+        <p className="text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+          Discover and connect with verified interior design professionals who can bring your vision to life.
+        </p>
+        
+      </div>
+    </section>
 
 				<div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
 					{/* ✅ FILTERS SIDEBAR */}
@@ -483,11 +501,11 @@ const DesignIdeas = () => {
 								{vendors.map((vendor) => (
 									<Card
 										key={vendor._id}
-										className="hover:shadow-lg transition-shadow cursor-pointer"
+										className="hover:shadow-lg hover:border-blue-400 hover:bg-blue-50 transition-shadow cursor-pointer"
 										onClick={() => navigate(`/design-vendor/${vendor._id}`)}>
 										<CardContent className="p-6">
 											<div className="flex items-start space-x-6">
-												<Avatar className="w-16 h-16 flex-shrink-0">
+												<Avatar className=" w-40 h-40 flex-shrink-0">
 													<AvatarImage
 														src={
 															vendor.profileImageUrl ||
@@ -500,7 +518,8 @@ const DesignIdeas = () => {
 													</AvatarFallback>
 												</Avatar>
 												{/* Main Content Section */}
-												<div className="flex-1">
+												<div className='p-5 w-full'>
+													<div className="flex-1 space-y-3 " >
 													<div className="flex items-start justify-between">
 														<div className="flex-1">
 															<h3 className="font-semibold text-lg text-gray-900">
@@ -518,7 +537,7 @@ const DesignIdeas = () => {
 														</div>
 
 														{/* Action Button */}
-														<Button variant="outline" size="sm">
+														<Button variant="outline " className="bg-gray-100 border border-blue-600 hover:bg-blue-500 hover:text-white" size="lg">
 															View Profile
 														</Button>
 													</div>
@@ -546,8 +565,13 @@ const DesignIdeas = () => {
 														)}
 													</div>
 
+													<div className='flex gap-2'>
+														<p className='text-sm'>Description: </p>
+														<p className=' text-gray-600 text-sm '>{vendor?.about}</p>
+													</div>
+
 													{/* Categories and Badges */}
-													<div className="flex items-center justify-between">
+													{/* <div className="flex items-center justify-between">
 														<div className="flex flex-wrap gap-1">
 															{vendor.categories &&
 																vendor.categories.length > 0 && (
@@ -587,7 +611,8 @@ const DesignIdeas = () => {
 																</Badge>
 															)}
 														</div>
-													</div>
+													</div> */}
+												</div>
 												</div>
 											</div>
 										</CardContent>

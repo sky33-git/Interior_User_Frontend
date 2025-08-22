@@ -496,6 +496,13 @@ function Navbar() {
 												<User size={16} className="mr-2" />
 												Profile
 											</Link>
+											<Link
+												to="/messages"
+												className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+												onClick={() => setUserDropdown(false)}>
+												<User size={16} className="mr-2" />
+												Messages
+											</Link>
 											<hr className="my-1" />
 											<button
 												onClick={handleLogout}
@@ -609,6 +616,13 @@ function Navbar() {
 							onClick={() => setUserDropdown(false)}>
 							<User size={16} className="mr-2" />
 							Profile
+						</Link>
+						<Link
+							to="/messages"
+							className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+							onClick={() => setUserDropdown(false)}>
+							<User size={16} className="mr-2" />
+							Messages
 						</Link>
 						<hr className="my-1" />
 						<button
