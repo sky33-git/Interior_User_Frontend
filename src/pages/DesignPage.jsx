@@ -295,7 +295,7 @@ const DesignPage = () => {
 				</div>
 
 				{/* Debug Info Panel */}
-				<div className="mb-8 p-4 bg-blue-50 rounded-lg">
+				{/* <div className="mb-8 p-4 bg-blue-50 rounded-lg">
 					<h3 className="font-bold text-blue-800 mb-2">🔍 Debug Information</h3>
 					<div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
 						<div>
@@ -320,7 +320,7 @@ const DesignPage = () => {
 								.join(', ')}
 						</div>
 					)}
-				</div>
+				</div> */}
 
 				{/* Products Grid */}
 				{filteredProducts.length > 0 ? (

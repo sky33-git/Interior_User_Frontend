@@ -17,11 +17,11 @@ import ProtectedRoute from './ProtectedRoute';
 import Resources from './pages/Resources';
 import Search from './pages/SearchAi';
 import SignUp from './pages/SignUp';
-import Test from './Test';
 import Toast from './Toast';
 import VenderDetail from './pages/VenderDetail';
 import { useLocation } from 'react-router-dom';
 import AIChatGenerator from './pages/AIChatGenerator';
+import ShortVideoFeed from './pages/ShortVideoFeed';
 
 
 function AppContent() {
@@ -51,10 +51,9 @@ function AppContent() {
 			<div className="pt-16">
 				<Routes>
 					<Route path="/" element={<Home />} />
-					<Route path="/test" element={<Test />} />
 					<Route path="/feature" element={<Feature />} />
-					<Route path="/resources" element={<Resources />} />
-					<Route path="/design-page" element={<DesignPage />} />
+					{/* <Route path="/resources" element={<Resources />} /> */}
+					{/* <Route path="/design-page" element={<DesignPage />} /> */}
 					<Route path="/design-page/:category" element={<DesignPage />} />
 					<Route path="/design-detail/:id" element={<DesignDetailPage />} />
 					<Route path="/design-vendor/:id" element={<VenderDetail />} />
@@ -102,6 +101,14 @@ function AppContent() {
 							</ProtectedRoute>
 						}
 					/>
+					<Route
+						path="/reels"
+						element={
+							<ProtectedRoute>
+								<ShortVideoFeed/>
+							</ProtectedRoute>
+						}
+					/>
 
 					<Route
 						path="/profile"
@@ -111,14 +118,14 @@ function AppContent() {
 							</ProtectedRoute>
 						}
 					/>
-					{/* <Route
+					<Route
 						path="/messages"
 						element={
 							<ProtectedRoute>
 								<Messages />
 							</ProtectedRoute>
 						}
-					/> */}
+					/>
 				</Routes>
 			</div>
 {/* Footer - hide on home page */}

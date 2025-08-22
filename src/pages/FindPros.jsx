@@ -119,7 +119,7 @@ const FindPros = () => {
 		<div className="min-h-[1024px] bg-gray-50">
 			<div className="max-w-[1440px] mx-auto px-8 py-12">
 				{/* Hero Section */}
-				<div className="relative h-[400px] mb-20 rounded-2xl overflow-hidden">
+				{/* <div className="relative h-[400px] mb-20 rounded-2xl overflow-hidden">
 					<div
 						className="absolute inset-0 bg-cover bg-center"
 						style={{
@@ -141,10 +141,43 @@ const FindPros = () => {
 							</Button>
 						</div>
 					</div>
-				</div>
+				</div> */}
+
+				    <section className="relative bg-gray-50 mb-10">
+      {/* Background Image with Overlay */}
+      <div className="absolute inset-0 ">
+        <img
+          src="https://images.pexels.com/photos/1090638/pexels-photo-1090638.jpeg" // replace with your hero image
+          alt="Modern Interior"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/40" />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 max-w-6xl mx-auto px-6 py-28 text-center text-white">
+        <h1 className="text-4xl md:text-6xl font-bold mb-6">
+          Home Interior Design
+        </h1>
+        <p className="text-lg md:text-xl max-w-3xl mx-auto mb-8 leading-relaxed">
+          We bring you carefully curated interior design ideas to give your home a brand new look. 
+          Explore exclusive designs and trends that are both inspirational and practical. 
+          Our team of designers has put together ideas for kitchens, bedrooms, living rooms and more 
+          to help you choose what fits your home best.
+        </p>
+        {/* <div className="flex justify-center gap-4">
+          <button className="bg-white text-gray-900 px-6 py-3 rounded-2xl font-medium shadow-md hover:bg-gray-100 transition">
+            Explore Designs
+          </button>
+          <button className="bg-transparent border border-white px-6 py-3 rounded-2xl font-medium hover:bg-white hover:text-gray-900 transition">
+            Get Consultation
+          </button>
+        </div> */}
+      </div>
+    </section>
 
 				{/* Category Tabs */}
-				<div className="mb-8 overflow-x-auto whitespace-nowrap">
+				<div className="mb-8 overflow-x-auto scrollbar-hide  whitespace-nowrap">
 					<div className="flex gap-4 pb-2 border-b border-gray-300">
 						<Button
 							variant={activeTab === 'All' ? 'default' : 'outline'}
@@ -167,16 +200,16 @@ const FindPros = () => {
 					</div>
 				</div>
 
-				<h2 className="text-3xl font-bold text-gray-900 mb-8 font-serif">
+				{/* <h2 className="text-3xl font-bold text-gray-900 mb-8 font-serif">
 					Explore Categories
-				</h2>
+				</h2> */}
 
 				{filteredCategories.length === 0 ? (
 					<div className="text-center py-12">
 						<p className="text-gray-600 text-lg">No categories found</p>
 					</div>
 				) : (
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
 						{filteredCategories.map((category) => (
 							<div
 								key={category._id}
