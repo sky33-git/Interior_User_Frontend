@@ -22,13 +22,14 @@ import VenderDetail from './pages/VenderDetail';
 import { useLocation } from 'react-router-dom';
 import AIChatGenerator from './pages/AIChatGenerator';
 import ShortVideoFeed from './pages/ShortVideoFeed';
+import InteriorDesignHomepage from './pages/Home';
 
 
 function AppContent() {
 	const { toast, hideToast } = useAuth();
 		const location = useLocation();
 
-		const isHomePage = location.pathname === '/';
+		const isHomePage = location.pathname === '/reels';
 
 
 	return (
@@ -41,7 +42,7 @@ function AppContent() {
 			/>
 			<div className="fixed top-0 left-0 right-0 z-50">
 				<Navbar />
-			</div>
+				</div>
 			{/* Navbar - hide on home page */}
 			{/* {!isHomePage && (
 				<div className="fixed top-0 left-0 right-0 z-50">
@@ -50,7 +51,7 @@ function AppContent() {
 			)} */}
 			<div className="pt-16">
 				<Routes>
-					<Route path="/" element={<Home />} />
+					<Route path="/" element={<InteriorDesignHomepage />} />
 					<Route path="/feature" element={<Feature />} />
 					{/* <Route path="/resources" element={<Resources />} /> */}
 					{/* <Route path="/design-page" element={<DesignPage />} /> */}
@@ -74,6 +75,14 @@ function AppContent() {
 						element={
 							<ProtectedRoute>
 								<Ideas />
+							</ProtectedRoute>
+						}
+					/>
+						<Route
+						path="/reels"
+						element={
+							<ProtectedRoute>
+								<ShortVideoFeed />
 							</ProtectedRoute>
 						}
 					/>
