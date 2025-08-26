@@ -496,7 +496,7 @@ const VenderDetail = () => {
 								} dedicated to delivering quality services.`}
 						</p>
 
-						{vendor.categories && vendor.categories.length > 0 && (
+						{/* {vendor.categories && vendor.categories.length > 0 && (
 							<div className="mt-6">
 								<h3 className="text-lg font-semibold text-gray-900 mb-3">
 									Specializations
@@ -511,7 +511,7 @@ const VenderDetail = () => {
 									))}
 								</div>
 							</div>
-						)}
+						)} */}
 
 						<div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
 							<div>
@@ -522,12 +522,12 @@ const VenderDetail = () => {
 									<p className="text-gray-600">
 										📍 {formatAddress(vendor.location)}
 									</p>
-									{vendor.phone && (
+									{/* {vendor.phone && (
 										<p className="text-gray-600">📞 {vendor.phone}</p>
 									)}
 									{vendor.email && (
 										<p className="text-gray-600">✉️ {vendor.email}</p>
-									)}
+									)} */}
 								</div>
 							</div>
 
@@ -540,11 +540,11 @@ const VenderDetail = () => {
 									{vendor.professionType && (
 										<p className="text-gray-600">👔 {vendor.professionType}</p>
 									)}
-									{vendor.license && (
+									{/* {vendor.license && (
 										<p className="text-gray-600">
 											📜 License: {vendor.license}
 										</p>
-									)}
+									)} */}
 									{vendor.budgetLevel && (
 										<p className="text-gray-600">
 											💰 Budget Level: {vendor.budgetLevel}
@@ -595,18 +595,18 @@ const VenderDetail = () => {
 						<h2 className="text-2xl font-bold text-gray-900 mb-4">Business</h2>
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 							<div className="space-y-3">
-								<p className="text-sm">
+								{/* <p className="text-sm">
 									<span className="font-medium text-gray-700">Phone:</span>{' '}
 									<span className="text-gray-600">
 										{vendor.phone || 'Not provided'}
 									</span>
-								</p>
-								<p className="text-sm">
+								</p> */}
+								{/* <p className="text-sm">
 									<span className="font-medium text-gray-700">Email:</span>{' '}
 									<span className="text-gray-600">
 										{vendor.email || 'Not provided'}
 									</span>
-								</p>
+								</p> */}
 								{vendor.professionType && (
 									<p className="text-sm">
 										<span className="font-medium text-gray-700">

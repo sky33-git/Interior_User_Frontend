@@ -171,7 +171,38 @@ const DesignIdeas = () => {
 
 
 
-	console.log(vendors , "data")
+
+
+const VendorDescription = ({ text }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const maxLength = 100; // characters to show before "Read more"
+
+  if (!text) return null;
+
+  const shouldTruncate = text.length > maxLength;
+  const displayText = isExpanded ? text : text.slice(0, maxLength);
+
+  return (
+    <div className="flex gap-2">
+      {/* <p className="text-sm">Description: </p> */}
+      <p className="text-gray-600 text-sm">
+        {displayText}
+        {shouldTruncate && (
+          <span
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="text-blue-600 cursor-pointer ml-1"
+          >
+            {isExpanded ? "Read less" : "Read more"}
+          </span>
+        )}
+      </p>
+    </div>
+  );
+};
+
+
+
+
 	return (
 		<div className="min-h-screen bg-gray-50  ">
 			<div className="max-w-7xl mx-auto px-4 py-8">
@@ -551,23 +582,25 @@ const DesignIdeas = () => {
 															{vendor.location?.state &&
 																`, ${vendor.location.state}`}
 														</div>
-														{vendor.phone && (
+														{/* {vendor.phone && (
 															<div className="flex items-center gap-1">
 																<Phone className="h-4 w-4" />
 																{vendor.phone}
 															</div>
-														)}
-														{vendor.email && (
+														)} */}
+														{/* {vendor.email && (
 															<div className="flex items-center gap-1">
 																<Mail className="h-4 w-4" />
 																{vendor.email}
 															</div>
-														)}
+														)} */}
 													</div>
 
 													<div className='flex gap-2'>
-														<p className='text-sm'>Description: </p>
-														<p className=' text-gray-600 text-sm '>{vendor?.about}</p>
+														{/* <p className='text-sm'>Description: </p> */}
+														{/* <p className=' text-gray-600 text-sm '>{vendor?.about}</p> */}
+														<VendorDescription text={vendor?.about} />
+
 													</div>
 
 													{/* Categories and Badges */}
