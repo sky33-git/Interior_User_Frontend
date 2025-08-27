@@ -14,6 +14,8 @@ import {
   FaEnvelope,
   FaLink,
 } from "react-icons/fa";
+import { Volume2, VolumeX } from "lucide-react";
+
 import { IoIosSend } from "react-icons/io";
 import { RiKakaoTalkFill } from "react-icons/ri";
 import { BsThreeDotsVertical, BsReply } from "react-icons/bs";
@@ -21,6 +23,8 @@ import { Link } from "react-router-dom";
 
 export default function ShortVideoFeed() {
   const containerRef = useRef(null);
+  const [muted, setMuted] = useState(true);
+
   const videoRefs = useRef([]);
   const commentRef = useRef(null);
   const commentInputRef = useRef(null);
@@ -45,21 +49,49 @@ export default function ShortVideoFeed() {
   }, [videos]);
 
   // Map API product data to video format
+  // const mapApiDataToVideos = (products) => {
+  //   return products.map((item, index) => ({
+  //     id: item._id || index,
+  //     src: item.gallery?.[0]?.url, // take first gallery video/image
+  //     profile: item.vendorId?.images.profileImage,
+  //     username: item.vendorId?.title || "unknown_vendor",
+  //     vendorNameId: item.vendorId?._id,
+  //     title: item.title,
+  //     description: item.shortDescription || item.description || "",
+  //     tags: item.metadata?.tags || [],
+  //     likes: Math.floor(Math.random() * 5000) + 100, // placeholder until backend provides
+  //     comments: [], // empty for now
+  //     timestamp: new Date(item.createdAt || Date.now()),
+  //   }));
+  // };
+
+
   const mapApiDataToVideos = (products) => {
-    return products.map((item, index) => ({
-      id: item._id || index,
-      src: item.gallery?.[0]?.url, // take first gallery video/image
-      profile: item.vendorId?.images.profileImage,
-      username: item.vendorId?.title || "unknown_vendor",
-      vendorNameId: item.vendorId?._id,
-      title: item.title,
-      description: item.shortDescription || item.description || "",
-      tags: item.metadata?.tags || [],
-      likes: Math.floor(Math.random() * 5000) + 100, // placeholder until backend provides
-      comments: [], // empty for now
-      timestamp: new Date(item.createdAt || Date.now()),
-    }));
-  };
+  let allVideos = [];
+
+  products.forEach((item, index) => {
+    const galleryVideos = (item.gallery || [])
+      .filter((g) => g.url) // only those with a url
+      .map((g, vidIndex) => ({
+        id: `${item._id}-${vidIndex}`, // unique per product-video
+        src: g.url,
+        profile: item.vendorId?.images?.profileImage,
+        username: item.vendorId?.title || "unknown_vendor",
+        vendorNameId: item.vendorId?._id,
+        title: item.title,
+        description: item.shortDescription || item.description || "",
+        tags: item.metadata?.tags || [],
+        likes: Math.floor(Math.random() * 5000) + 100,
+        comments: [],
+        timestamp: new Date(item.createdAt || Date.now()),
+      }));
+
+    allVideos = [...allVideos, ...galleryVideos];
+  });
+
+  return allVideos;
+};
+
 
   // Fetch videos from API
   useEffect(() => {
@@ -290,15 +322,15 @@ export default function ShortVideoFeed() {
 
   const processImageUrl = (
     imageUrl,
-    transformations = 'c_fill,f_auto,h_50,q_auto,w_50'
+    transformations = "c_fill,f_auto,h_50,q_auto,w_50"
   ) => {
     if (!imageUrl) return null;
 
-    if (imageUrl.startsWith('http')) {
+    if (imageUrl.startsWith("http")) {
       return imageUrl;
     }
 
-    if (imageUrl.includes('/') && !imageUrl.startsWith('http')) {
+    if (imageUrl.includes("/") && !imageUrl.startsWith("http")) {
       return `https://res.cloudinary.com/dbpjwgvst/image/upload/${transformations}/v1/${imageUrl}`;
     }
 
@@ -327,10 +359,21 @@ export default function ShortVideoFeed() {
               src={video.src}
               data-index={index}
               className="h-full w-full object-cover"
-              muted
+              muted={muted}
               loop
               playsInline
             />
+
+            <button
+              onClick={() => setMuted((m) => !m)}
+              className="absolute top-4 right-4 bg-black bg-opacity-50 rounded-full p-2"
+            >
+              {muted ? (
+                <VolumeX className="text-white w-6 h-6" />
+              ) : (
+                <Volume2 className="text-white w-6 h-6" />
+              )}
+            </button>
 
             {/* Bottom Video Info */}
             <div className="absolute bottom-20 left-4 text-white max-w-xs z-10">
@@ -351,7 +394,6 @@ export default function ShortVideoFeed() {
                     View Product
                   </button>
                 </Link>
-
               </div>
               <p className="text-sm font-medium mb-1">{video.title}</p>
               <p className="text-xs opacity-90">{video.description}</p>
@@ -540,9 +582,10 @@ export default function ShortVideoFeed() {
                   onKeyPress={(e) => e.key === "Enter" && handleAddComment()}
                   placeholder={
                     replyingTo
-                      ? `Replying to @${comments.find((c) => c.id === replyingTo)?.user
-                        .name || "user"
-                      }...`
+                      ? `Replying to @${
+                          comments.find((c) => c.id === replyingTo)?.user
+                            .name || "user"
+                        }...`
                       : "Add a comment..."
                   }
                   className="flex-1 p-2 px-4 rounded-full bg-gray-700 text-white outline-none text-sm"
@@ -550,8 +593,9 @@ export default function ShortVideoFeed() {
                 <button
                   onClick={handleAddComment}
                   disabled={!commentText.trim()}
-                  className={`p-2 rounded-full ${commentText.trim() ? "text-blue-500" : "text-gray-500"
-                    }`}
+                  className={`p-2 rounded-full ${
+                    commentText.trim() ? "text-blue-500" : "text-gray-500"
+                  }`}
                 >
                   <IoIosSend className="text-xl" />
                 </button>

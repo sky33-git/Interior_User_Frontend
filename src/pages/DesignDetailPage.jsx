@@ -6,6 +6,13 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api";
 
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
+
 const DesignDetailPage = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
@@ -118,7 +125,37 @@ const DesignDetailPage = () => {
     );
   }
 
-  const galleryImages = getGalleryImages(product);
+  // const galleryImages = getGalleryImages(product);
+
+
+  // ✅ Build all media from product
+const getAllMedia = (product) => {
+  let media = [];
+
+  // Thumbnail first
+  if (product?.thumbnailImage?.url) {
+    media.push({
+      type: product.thumbnailImage.type || "image",
+      url: product.thumbnailImage.url,
+    });
+  }
+
+  // Gallery (image or video)
+  if (product?.gallery && product.gallery.length > 0) {
+    media = [
+      ...media,
+      ...product.gallery.map((item) => ({
+        type: item.type || "image",
+        url: item.url,
+      })),
+    ];
+  }
+
+  return media;
+};
+
+const allMedia = getAllMedia(product);
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -126,53 +163,40 @@ const DesignDetailPage = () => {
     
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* ✅ FIXED: Image section with proper URL handling */}
-          <div className="relative h-[500px] lg:h-[800px] rounded-xl overflow-hidden shadow-lg">
-            <img
-              src={product.thumbnailImage.url}
-              alt={product.name}
-              className="w-full h-full object-cover object-top"
-              onError={(e) => {
-                console.warn(`❌ Image failed to load: ${e.target.src}`);
-                e.target.src = "/placeholder-image.jpg";
-              }}
-              onLoad={() => {
-                console.log("✅ Main image loaded successfully");
-              }}
-            />
+         
+{/* ✅ Carousel with images & videos */}
+<div className="relative h-[500px] lg:h-[800px] rounded-xl overflow-hidden shadow-lg">
+  <Swiper
+    modules={[Navigation, Pagination]}
+    navigation
+    pagination={{ clickable: true }}
+    className="w-full h-full"
+  >
+    {allMedia.map((item, index) => (
+      <SwiperSlide key={index}>
+        {item.type === "image" ? (
+          <img
+            src={item.url}
+            alt={`media-${index}`}
+            className="w-full h-full object-cover object-top"
+            onError={(e) => {
+              e.target.src = "/placeholder-image.jpg";
+            }}
+          />
+        ) : (
+          <video
+            src={item.url}
+            controls
+            className="w-full h-full object-cover object-top"
+          />
+        )}
+      </SwiperSlide>
+    ))}
+  </Swiper>
+</div>
 
-            {/* ✅ FIXED: Gallery images with proper URL handling */}
-            {galleryImages && galleryImages.length > 0 && (
-              <div className="absolute bottom-4 left-4 flex space-x-2">
-                {galleryImages.slice(0, 3).map((image, index) => (
-                  <div
-                    key={index}
-                    className="w-12 h-12 rounded-lg overflow-hidden border-2 border-white"
-                  >
-                    <img
-                      src={image}
-                      alt={`Gallery ${index + 1}`}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        console.warn(
-                          `❌ Gallery image ${index + 1} failed to load: ${
-                            e.target.src
-                          }`
-                        );
-                        e.target.src = "/placeholder-image.jpg";
-                      }}
-                    />
-                  </div>
-                ))}
-                {galleryImages.length > 3 && (
-                  <div className="w-12 h-12 rounded-lg bg-black bg-opacity-50 border-2 border-white flex items-center justify-center">
-                    <span className="text-white text-xs font-semibold">
-                      +{galleryImages.length - 3}
-                    </span>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+      
+
 
           {/* Product details section - unchanged */}
           <div className="relative">
