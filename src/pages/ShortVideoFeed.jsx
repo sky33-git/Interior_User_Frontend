@@ -73,7 +73,7 @@ export default function ShortVideoFeed() {
     const galleryVideos = (item.gallery || [])
       .filter((g) => g.url) // only those with a url
       .map((g, vidIndex) => ({
-        id: `${item._id}-${vidIndex}`, // unique per product-video
+        id: `${item._id}`, // unique per product-video
         src: g.url,
         profile: item.vendorId?.images?.profileImage,
         username: item.vendorId?.title || "unknown_vendor",
