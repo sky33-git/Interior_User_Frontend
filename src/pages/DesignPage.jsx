@@ -197,7 +197,7 @@ const DesignPage = () => {
 	const getProductImage = (product) => {
 		// Use imageUrl first (processed), then thumbnailImage, then fallback
 		return (
-			product.imageUrl || product.thumbnailImage || '/placeholder-image.jpg'
+			product?.imageUrl || product?.thumbnailImage || '/placeholder-image.jpg'
 		);
 	};
 
@@ -331,7 +331,7 @@ const DesignPage = () => {
 									<div className="relative h-64 overflow-hidden">
 										<img
 											src={getProductImage(product)}
-											alt={product.name}
+											alt={product?.name}
 											className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
 											onError={(e) => handleImageError(e, product.name)}
 										/>

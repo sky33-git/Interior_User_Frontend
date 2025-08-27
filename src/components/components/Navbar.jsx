@@ -52,12 +52,12 @@ function Navbar() {
 
       const response = await categoryAPI.getAllCategories();
       if (response && response.data) {
-        console.log("Fetched response from navbar : ", response.data);
+        // console.log("Fetched response from navbar : ", response.data);
         const filteredCategories = response.data.filter(
           (category) => category.categoryType === "platform"
         );
         setCategories(filteredCategories);
-        console.log("Fetched categories from navbar : ", filteredCategories);
+        // console.log("Fetched categories from navbar : ", filteredCategories);
       }
     } catch (error) {
       console.error("Failed to fetch categories:", error);
