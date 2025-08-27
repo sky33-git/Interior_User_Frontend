@@ -1,12 +1,12 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-} from '@/components/ui/dialog';
+// import {
+// 	Dialog,
+// 	DialogContent,
+// 	DialogHeader,
+// 	DialogTitle,
+// } from '@/components/ui/dialog';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import api from '../api';
@@ -23,7 +23,7 @@ const DesignPage = () => {
 	const [totalPages, setTotalPages] = useState(1);
 	const [totalProducts, setTotalProducts] = useState(0);
 	const [savedDesigns, setSavedDesigns] = useState([]);
-	const [selectedDesign, setSelectedDesign] = useState(null);
+	// const [selectedDesign, setSelectedDesign] = useState(null);
 
 	const categoryName = urlCategory
 		? decodeURIComponent(urlCategory)
@@ -191,15 +191,7 @@ const DesignPage = () => {
 		if (products.length > 0) {
 			applyFilters();
 		}
-	}, [applyFilters]);
-
-	// ✅ ENHANCED: Better image URL handling
-	const getProductImage = (product) => {
-		// Use imageUrl first (processed), then thumbnailImage, then fallback
-		return (
-			product?.imageUrl || product?.thumbnailImage || '/placeholder-image.jpg'
-		);
-	};
+	}, [applyFilters, products.length]);
 
 	const handleImageError = (e, productName) => {
 		console.warn(`❌ Image failed for product: ${productName}`);
@@ -330,8 +322,8 @@ const DesignPage = () => {
 								<Card className="overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer">
 									<div className="relative h-64 overflow-hidden">
 										<img
-											src={getProductImage(product)}
-											alt={product?.name}
+											src={product.thumbnailImage.url}
+											alt={'/placeholder-image.jpg'}
 											className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
 											onError={(e) => handleImageError(e, product.name)}
 										/>

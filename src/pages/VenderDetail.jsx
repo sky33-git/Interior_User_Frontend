@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import {
 	Dialog,
 	DialogContent,
@@ -13,7 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import api from '../api';
 
 const VenderDetail = () => {
@@ -25,14 +26,14 @@ const VenderDetail = () => {
 	const [error, setError] = useState('');
 
 	// Reviews states
-	const [reviews, setReviews] = useState([]);
-	const [reviewsLoading, setReviewsLoading] = useState(false);
-	const [reviewsPage, setReviewsPage] = useState(1);
-	const [totalReviews, setTotalReviews] = useState(0);
+	// // const [reviews, setReviews] = useState([]);
+	// const [reviewsLoading, setReviewsLoading] = useState(false);
+	// const [reviewsPage, setReviewsPage] = useState(1);
+	// const [totalReviews, setTotalReviews] = useState(0);
 
 	// Modal states
 	const [messageModal, setMessageModal] = useState(false);
-	const [reviewModal, setReviewModal] = useState(false);
+	// const [reviewModal, setReviewModal] = useState(false);
 
 	// Message form states
 	const [messageData, setMessageData] = useState({
@@ -42,13 +43,14 @@ const VenderDetail = () => {
 	});
 	const [messageSending, setMessageSending] = useState(false);
 
-	// Review form states
-	const [reviewData, setReviewData] = useState({
-		rating: 0,
-		reviewText: '',
-	});
-	const [reviewImages, setReviewImages] = useState(null);
-	const [reviewSubmitting, setReviewSubmitting] = useState(false);
+	// // Review form states
+	// const [reviewData, setReviewData] = useState({
+	// 	rating: 0,
+	// 	reviewText: '',
+	// });
+	// const [reviewImages, setReviewImages] = useState(null);
+	// const [reviewSubmitting, setReviewSubmitting] = useState(false);
+	const [savedDesigns, setSavedDesigns] = useState([]);
 
 	const sections = [
 		{ id: 'about', label: 'About Us' },
@@ -87,13 +89,13 @@ const VenderDetail = () => {
 		return processImageUrl(imageUrl, 'c_fill,f_auto,h_300,q_auto,w_1200');
 	};
 
-	const getPortfolioImageUrl = (imageUrl) => {
-		return processImageUrl(imageUrl, 'c_fill,f_auto,h_300,q_auto,w_400');
-	};
+	// const getPortfolioImageUrl = (imageUrl) => {
+	// 	return processImageUrl(imageUrl, 'c_fill,f_auto,h_300,q_auto,w_400');
+	// };
 
-	const getReviewImageUrl = (imageUrl) => {
-		return processImageUrl(imageUrl, 'c_fill,f_auto,h_100,q_auto,w_100');
-	};
+	// const getReviewImageUrl = (imageUrl) => {
+	// 	return processImageUrl(imageUrl, 'c_fill,f_auto,h_100,q_auto,w_100');
+	// };
 
 	useEffect(() => {
 		const fetchVendorDetails = async () => {
@@ -210,7 +212,7 @@ const VenderDetail = () => {
 					messageData.pincode || user.pincode || user.location?.pincode || '',
 			};
 
-			const response = await api.messages.sendMessage(payload);
+			await api.messages.sendMessage(payload);
 
 			setMessageData({ message: '', phone: '', pincode: '' });
 			setMessageModal(false);
@@ -264,38 +266,38 @@ const VenderDetail = () => {
 	// };
 
 	// Load more reviews
-	const loadMoreReviews = () => {
-		setReviewsPage((prev) => prev + 1);
-	};
+	// const loadMoreReviews = () => {
+	// 	setReviewsPage((prev) => prev + 1);
+	// };
 
-	const renderStars = (rating) => {
-		const stars = [];
-		const fullStars = Math.floor(rating);
-		const hasHalfStar = rating % 1 >= 0.5;
+	// const renderStars = (rating) => {
+	// 	const stars = [];
+	// 	const fullStars = Math.floor(rating);
+	// 	const hasHalfStar = rating % 1 >= 0.5;
 
-		for (let i = 1; i <= 5; i++) {
-			if (i <= fullStars) {
-				stars.push(
-					<span key={i} className="text-yellow-400">
-						★
-					</span>
-				);
-			} else if (i === fullStars + 1 && hasHalfStar) {
-				stars.push(
-					<span key={i} className="text-yellow-400">
-						★
-					</span>
-				);
-			} else {
-				stars.push(
-					<span key={i} className="text-gray-300">
-						★
-					</span>
-				);
-			}
-		}
-		return stars;
-	};
+	// 	for (let i = 1; i <= 5; i++) {
+	// 		if (i <= fullStars) {
+	// 			stars.push(
+	// 				<span key={i} className="text-yellow-400">
+	// 					★
+	// 				</span>
+	// 			);
+	// 		} else if (i === fullStars + 1 && hasHalfStar) {
+	// 			stars.push(
+	// 				<span key={i} className="text-yellow-400">
+	// 					★
+	// 				</span>
+	// 			);
+	// 		} else {
+	// 			stars.push(
+	// 				<span key={i} className="text-gray-300">
+	// 					★
+	// 				</span>
+	// 			);
+	// 		}
+	// 	}
+	// 	return stars;
+	// };
 
 	// const renderInteractiveStars = (rating, onRatingChange) => {
 	// 	const ratings = [
@@ -343,6 +345,36 @@ const VenderDetail = () => {
 			location.pincode,
 		].filter(Boolean);
 		return parts.length > 0 ? parts.join(', ') : 'Location not specified';
+	};
+
+	const handleImageError = (e, productName) => {
+		console.warn(`❌ Image failed for product: ${productName}`);
+		e.target.src = '/placeholder-image.jpg';
+	};
+
+	const formatPrice = (priceRange) => {
+		if (!priceRange || (!priceRange.min && !priceRange.max)) {
+			return 'Price on Request';
+		}
+		const currency = priceRange.currency || 'INR';
+		const symbol = currency === 'INR' ? '₹' : '$';
+		if (priceRange.min && priceRange.max) {
+			return `${symbol}${priceRange.min.toLocaleString()} - ${symbol}${priceRange.max.toLocaleString()}`;
+		} else if (priceRange.min) {
+			return `Starting ${symbol}${priceRange.min.toLocaleString()}`;
+		} else {
+			return 'Price on Request';
+		}
+	};
+
+	const toggleSaveDesign = (id, event) => {
+		event.stopPropagation();
+		event.preventDefault();
+		if (savedDesigns.includes(id)) {
+			setSavedDesigns(savedDesigns.filter((designId) => designId !== id));
+		} else {
+			setSavedDesigns([...savedDesigns, id]);
+		}
 	};
 
 	if (loading) {
@@ -444,8 +476,7 @@ const VenderDetail = () => {
 													`Inquiry about ${vendor.name || 'your services'}`
 												);
 												const body = encodeURIComponent(
-													`Hello ${
-														vendor.name || 'there'
+													`Hello ${vendor.name || 'there'
 													},\n\nI am interested in your services. Please let me know your availability and rates.\n\nThank you!`
 												);
 												const gmailUrl = `https://mail.google.com/mail/?view=cm&to=${vendor.email}&subject=${subject}&body=${body}`;
@@ -491,8 +522,7 @@ const VenderDetail = () => {
 						<h2 className="text-2xl font-bold text-gray-900 mb-4">About Us</h2>
 						<p className="text-gray-700 leading-relaxed">
 							{vendor.about ||
-								`${vendor.name} is a professional ${
-									vendor.professionType || 'service provider'
+								`${vendor.name} is a professional ${vendor.professionType || 'service provider'
 								} dedicated to delivering quality services.`}
 						</p>
 
@@ -558,7 +588,7 @@ const VenderDetail = () => {
 					{/* ✅ FIXED: Projects Section with correct portfolio data access */}
 					<section id="projects" className="bg-white rounded-lg shadow-sm p-6">
 						<h2 className="text-2xl font-bold text-gray-900 mb-4">Projects</h2>
-						{vendor.images?.portfolio && vendor.images.portfolio.length > 0 ? (
+						{/* {vendor.images?.portfolio && vendor.images.portfolio.length > 0 ? (
 							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 								{vendor.images.portfolio.map((image, index) => (
 									<div
@@ -587,7 +617,106 @@ const VenderDetail = () => {
 									This vendor hasn't uploaded any project showcases yet.
 								</p>
 							</div>
+						)} */}
+
+						{vendor.products.length > 0 ? (
+							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+								{vendor.products.map((product) => (
+									<Link key={product._id} to={`/design-detail/${product._id}`}>
+										<Card className="overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer">
+											<div className="relative h-64 overflow-hidden">
+												<img
+													src={product.thumbnailImage.url}
+													alt={'/placeholder-image.jpg'}
+													className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+													onError={(e) => handleImageError(e, product.name)}
+												/>
+
+												<div className="absolute top-4 right-4 z-10">
+													<Button
+														variant="outline"
+														size="icon"
+														className={`rounded-full bg-white/80 backdrop-blur-sm hover:bg-white ${savedDesigns.includes(product._id)
+																? 'text-red-500'
+																: 'text-gray-600'
+															} !rounded-button cursor-pointer`}
+														onClick={(e) => toggleSaveDesign(product._id, e)}>
+														<i
+															className={`${savedDesigns.includes(product._id) ? 'fas' : 'far'
+																} fa-heart`}></i>
+													</Button>
+												</div>
+
+												<div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+													<div className="flex justify-between items-center">
+														<Badge className="bg-blue-600">
+															{product.category}
+														</Badge>
+														<div className="flex items-center text-yellow-400">
+															<i className="fas fa-star mr-1"></i>
+															<span className="text-white text-sm">
+																{product.rating || 4.5}
+															</span>
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<div className="p-6">
+												<div className="flex justify-between items-start mb-2">
+													<h3 className="text-xl font-semibold text-gray-800">
+														{product.name}
+													</h3>
+												</div>
+												<p className="text-gray-600 text-sm mb-2">
+													By {product.vendorName || 'Designer'}
+												</p>
+												<p className="text-gray-700 mb-4 line-clamp-2">
+													{product.shortDescription}
+												</p>
+												<div className="flex justify-between items-center">
+													<p className="font-medium text-blue-600">
+														{formatPrice(product.priceRange)}
+													</p>
+													<Button
+														variant="outline"
+														className="text-blue-600 border-blue-600 hover:bg-blue-50 !rounded-button cursor-pointer whitespace-nowrap">
+														Details <i className="fas fa-arrow-right ml-2"></i>
+													</Button>
+												</div>
+											</div>
+										</Card>
+									</Link>
+								))}
+							</div>
+						) : (
+							<div className="text-center py-16">
+								<div className="text-gray-400 mb-4">
+									<svg
+										className="w-16 h-16 mx-auto"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24">
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth="2"
+											d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+										/>
+									</svg>
+								</div>
+								<h3 className="text-lg font-semibold text-gray-900 mb-2">
+									No designs found
+								</h3>
+
+								<Link to="/design-page/all">
+									<Button>Browse All Designs</Button>
+								</Link>
+							</div>
 						)}
+
+
+
 					</section>
 
 					{/* Business Section */}

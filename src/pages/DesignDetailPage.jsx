@@ -128,7 +128,7 @@ const DesignDetailPage = () => {
           {/* ✅ FIXED: Image section with proper URL handling */}
           <div className="relative h-[500px] lg:h-[800px] rounded-xl overflow-hidden shadow-lg">
             <img
-              src={getProductImage(product)}
+              src={product.thumbnailImage.url}
               alt={product.name}
               className="w-full h-full object-cover object-top"
               onError={(e) => {

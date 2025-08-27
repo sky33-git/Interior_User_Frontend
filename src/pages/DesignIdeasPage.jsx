@@ -63,6 +63,7 @@ const DesignIdeas = () => {
 
 		return () => clearTimeout(debounceTimer);
 	}, [filters]);
+	
 	const applyFilters = async () => {
 		try {
 			setLoading(true);

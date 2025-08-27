@@ -49,7 +49,7 @@ export default function ShortVideoFeed() {
     return products.map((item, index) => ({
       id: item._id || index,
       src: item.gallery?.[0]?.url, // take first gallery video/image
-      profile: item.processedImageUrl,
+      profile: item.vendorId?.images.profileImage,
       username: item.vendorId?.title || "unknown_vendor",
       vendorNameId: item.vendorId?._id,
       title: item.title,
@@ -288,6 +288,26 @@ export default function ShortVideoFeed() {
     },
   ];
 
+  const processImageUrl = (
+    imageUrl,
+    transformations = 'c_fill,f_auto,h_50,q_auto,w_50'
+  ) => {
+    if (!imageUrl) return null;
+
+    if (imageUrl.startsWith('http')) {
+      return imageUrl;
+    }
+
+    if (imageUrl.includes('/') && !imageUrl.startsWith('http')) {
+      return `https://res.cloudinary.com/dbpjwgvst/image/upload/${transformations}/v1/${imageUrl}`;
+    }
+
+    return `https://res.cloudinary.com/dbpjwgvst/image/upload/${transformations}/v1/${imageUrl}`;
+  };
+
+  const getProfileImageUrl = (imageUrl) => {
+    return processImageUrl(imageUrl);
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-black relative">
@@ -316,7 +336,7 @@ export default function ShortVideoFeed() {
             <div className="absolute bottom-20 left-4 text-white max-w-xs z-10">
               <div className="flex items-center gap-2 mb-2">
                 <img
-                  src={video?.profile}
+                  src={processImageUrl(video?.profile)}
                   alt="profile"
                   className="w-8 h-8 rounded-full border border-white object-cover"
                 />
@@ -326,12 +346,12 @@ export default function ShortVideoFeed() {
                     @{video.username}
                   </span>
                 </Link>
-                <Link to={`design-detail/${video.id}`}>
-                         <button className="text-sm font-bold bg-white text-black p-3 py-0.5 rounded ">
-                  View Product
-                </button>
+                <Link to={`/design-detail/${video.id}`}>
+                  <button className="text-sm font-bold bg-white text-black p-3 py-0.5 rounded ">
+                    View Product
+                  </button>
                 </Link>
-         
+
               </div>
               <p className="text-sm font-medium mb-1">{video.title}</p>
               <p className="text-xs opacity-90">{video.description}</p>
@@ -520,10 +540,9 @@ export default function ShortVideoFeed() {
                   onKeyPress={(e) => e.key === "Enter" && handleAddComment()}
                   placeholder={
                     replyingTo
-                      ? `Replying to @${
-                          comments.find((c) => c.id === replyingTo)?.user
-                            .name || "user"
-                        }...`
+                      ? `Replying to @${comments.find((c) => c.id === replyingTo)?.user
+                        .name || "user"
+                      }...`
                       : "Add a comment..."
                   }
                   className="flex-1 p-2 px-4 rounded-full bg-gray-700 text-white outline-none text-sm"
@@ -531,9 +550,8 @@ export default function ShortVideoFeed() {
                 <button
                   onClick={handleAddComment}
                   disabled={!commentText.trim()}
-                  className={`p-2 rounded-full ${
-                    commentText.trim() ? "text-blue-500" : "text-gray-500"
-                  }`}
+                  className={`p-2 rounded-full ${commentText.trim() ? "text-blue-500" : "text-gray-500"
+                    }`}
                 >
                   <IoIosSend className="text-xl" />
                 </button>
