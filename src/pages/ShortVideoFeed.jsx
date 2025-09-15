@@ -48,52 +48,69 @@ export default function ShortVideoFeed() {
     setVideoLikes(initialLikes);
   }, [videos]);
 
-  // Map API product data to video format
-  // const mapApiDataToVideos = (products) => {
-  //   return products.map((item, index) => ({
-  //     id: item._id || index,
-  //     src: item.gallery?.[0]?.url, // take first gallery video/image
-  //     profile: item.vendorId?.images.profileImage,
-  //     username: item.vendorId?.title || "unknown_vendor",
-  //     vendorNameId: item.vendorId?._id,
-  //     title: item.title,
-  //     description: item.shortDescription || item.description || "",
-  //     tags: item.metadata?.tags || [],
-  //     likes: Math.floor(Math.random() * 5000) + 100, // placeholder until backend provides
-  //     comments: [], // empty for now
-  //     timestamp: new Date(item.createdAt || Date.now()),
-  //   }));
-  // };
 
+  const getMediaType = (url) => {
+    if (!url) return "unknown";
+    const ext = url.split('.').pop().toLowerCase();
+    if (["mp4", "webm", "mov", "avi"].includes(ext)) return "video";
+    if (["jpg", "jpeg", "png", "gif", "webp"].includes(ext)) return "image";
+    // Optionally: handle Cloudinary video URLs via mime or metadata
+    return "image";
+  };
 
   const mapApiDataToVideos = (products) => {
-  let allVideos = [];
+    let items = [];
 
-  products.forEach((item, index) => {
-    const galleryVideos = (item.gallery || [])
-      .filter((g) => g.url) // only those with a url
-      .map((g, vidIndex) => ({
-        id: `${item._id}`, // unique per product-video
-        src: g.url,
-        profile: item.vendorId?.images?.profileImage,
-        username: item.vendorId?.title || "unknown_vendor",
-        vendorNameId: item.vendorId?._id,
-        title: item.title,
-        description: item.shortDescription || item.description || "",
-        tags: item.metadata?.tags || [],
-        likes: Math.floor(Math.random() * 5000) + 100,
-        comments: [],
-        timestamp: new Date(item.createdAt || Date.now()),
-      }));
+    products.forEach((item) => {
+      (item.gallery || []).forEach((media) => {
+        items.push({
+          id: `${item._id}`,
+          src: media.url,
+          type: getMediaType(media.url),
+          profile: item.vendorId?.images?.profileImage,
+          username: item.vendorId?.title || "unknown_vendor",
+          vendorNameId: item.vendorId?._id,
+          title: item.title,
+          description: item.shortDescription || item.description || "",
+          tags: item.metadata?.tags || [],
+          likes: Math.floor(Math.random() * 5000) + 100,
+          comments: [],
+          timestamp: new Date(item.createdAt || Date.now()),
+        });
+      });
+    });
 
-    allVideos = [...allVideos, ...galleryVideos];
-  });
-
-  return allVideos;
-};
+    return items;
+  };
 
 
-  // Fetch videos from API
+
+  //   const mapApiDataToVideos = (products) => {
+  //   let allVideos = [];
+
+  //   products.forEach((item) => {
+  //     const galleryVideos = (item.gallery || [])
+  //       .filter((g) => g.url) 
+  //       .map((g) => ({
+  //         id: `${item._id}`, 
+  //         src: g.url,
+  //         profile: item.vendorId?.images?.profileImage,
+  //         username: item.vendorId?.title || "unknown_vendor",
+  //         vendorNameId: item.vendorId?._id,
+  //         title: item.title,
+  //         description: item.shortDescription || item.description || "",
+  //         tags: item.metadata?.tags || [],
+  //         likes: Math.floor(Math.random() * 5000) + 100,
+  //         comments: [],
+  //         timestamp: new Date(item.createdAt || Date.now()),
+  //       }));
+
+  //     allVideos = [...allVideos, ...galleryVideos];
+  //   });
+
+  //   return allVideos;
+  // };
+
   useEffect(() => {
     const fetchVideos = async () => {
       try {
@@ -337,9 +354,9 @@ export default function ShortVideoFeed() {
     return `https://res.cloudinary.com/dbpjwgvst/image/upload/${transformations}/v1/${imageUrl}`;
   };
 
-  const getProfileImageUrl = (imageUrl) => {
-    return processImageUrl(imageUrl);
-  };
+  // const getProfileImageUrl = (imageUrl) => {
+  //   return processImageUrl(imageUrl);
+  // };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-black relative">
@@ -353,7 +370,7 @@ export default function ShortVideoFeed() {
             key={`${video.id}-${index}`}
             className="h-screen w-full relative flex-shrink-0 snap-start"
           >
-            {/* Video Element */}
+            {/* Video Element
             <video
               ref={(el) => (videoRefs.current[index] = el)}
               src={video.src}
@@ -362,7 +379,25 @@ export default function ShortVideoFeed() {
               muted={muted}
               loop
               playsInline
-            />
+            /> */}
+
+            {video.type === "video" ? (
+              <video
+                ref={(el) => (videoRefs.current[index] = el)}
+                src={video.src}
+                data-index={index}
+                className="h-full w-full object-cover"
+                muted={muted}
+                loop
+                playsInline
+              />
+            ) : (
+              <img
+                src={processImageUrl(video.src)}
+                alt={video.title}
+                className="h-full w-full object-cover"
+              />
+            )}
 
             <button
               onClick={() => setMuted((m) => !m)}
@@ -389,7 +424,7 @@ export default function ShortVideoFeed() {
                     @{video.username}
                   </span>
                 </Link>
-                <Link to={`/design-detail/${video.id}`}>
+                <Link to={`/design-detail/${video?.id}`}>
                   <button className="text-sm font-bold bg-white text-black p-3 py-0.5 rounded ">
                     View Product
                   </button>
@@ -582,10 +617,9 @@ export default function ShortVideoFeed() {
                   onKeyPress={(e) => e.key === "Enter" && handleAddComment()}
                   placeholder={
                     replyingTo
-                      ? `Replying to @${
-                          comments.find((c) => c.id === replyingTo)?.user
-                            .name || "user"
-                        }...`
+                      ? `Replying to @${comments.find((c) => c.id === replyingTo)?.user
+                        .name || "user"
+                      }...`
                       : "Add a comment..."
                   }
                   className="flex-1 p-2 px-4 rounded-full bg-gray-700 text-white outline-none text-sm"
@@ -593,9 +627,8 @@ export default function ShortVideoFeed() {
                 <button
                   onClick={handleAddComment}
                   disabled={!commentText.trim()}
-                  className={`p-2 rounded-full ${
-                    commentText.trim() ? "text-blue-500" : "text-gray-500"
-                  }`}
+                  className={`p-2 rounded-full ${commentText.trim() ? "text-blue-500" : "text-gray-500"
+                    }`}
                 >
                   <IoIosSend className="text-xl" />
                 </button>
