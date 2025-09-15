@@ -197,13 +197,8 @@ const DesignPage = () => {
 	const getProductImage = (product) => {
 		// Use imageUrl first (processed), then thumbnailImage, then fallback
 		return (
-			product.imageUrl || product.thumbnailImage || '/placeholder-image.jpg'
+			product.thumbnailImage.url || '/placeholder-image.jpg'
 		);
-	};
-
-	const handleImageError = (e, productName) => {
-		console.warn(`❌ Image failed for product: ${productName}`);
-		e.target.src = '/placeholder-image.jpg';
 	};
 
 	const formatPrice = (priceRange) => {
@@ -332,7 +327,7 @@ const DesignPage = () => {
 										<img
 											src={getProductImage(product)}
 											alt={product.name}
-											className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" onError={(e) => handleImageError(e, product.name)} />
+											className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
 
 										<div className="absolute top-4 right-4 z-10">
 											<Button
